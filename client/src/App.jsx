@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <div className='min-h-screen bg-black text-white overflow-x-hidden'>
-        
+        <h1 className='text-center text-3xl'>My Portfolio</h1>
         {/* <ScrollProgress />
         <Navbar />
         <Hero />
