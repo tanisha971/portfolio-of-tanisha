@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { Download, Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 // import resume from "../../assets/resume/Tanisha_Ali_Resume.pdf";
 
 const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Experience", href: "#experience" },
-  { name: "Projects", href: "#projects" },
-  { name: "Skills", href: "#skills" },
-  { name: "Certificates", href: "#certificates" },
-  { name: "Achievements", href: "#achievements" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/home", anchor: "home" },
+  { name: "About", href: "/about", anchor: "about" },
+  { name: "Skills", href: "/skills", anchor: "skills" },
+  { name: "Experience", href: "/experience", anchor: "experience" },
+  { name: "Projects", href: "/projects", anchor: "projects" },
+  { name: "Achievements", href: "/achievements", anchor: "achievements" },
+  { name: "Certificates", href: "/certificates", anchor: "certificates" },  
+  { name: "Coding Profiles", href: "/coding-profiles", anchor: "coding-profiles" },
+  { name: "Contact", href: "/contact", anchor: "contact" },
 ];
 
 export default function Navbar() {
@@ -23,7 +25,7 @@ export default function Navbar() {
       setIsScrolled(window.scrollY > 30);
 
       const sections = navLinks
-        .map((item) => document.querySelector(item.href))
+        .map((item) => document.getElementById(item.anchor))
         .filter(Boolean);
 
       let current = "home";
@@ -66,7 +68,7 @@ export default function Navbar() {
         {/* Logo */}
 
         <a
-          href="#home"
+          href="/home"
           className="text-2xl font-bold tracking-wide text-white transition hover:text-gray-300"
         >
           Tanisha<span className="text-gray-400">.</span>
@@ -76,13 +78,12 @@ export default function Navbar() {
 
         <nav className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => {
-            const isActive =
-              activeSection === link.href.replace("#", "");
+            const isActive = activeSection === link.anchor;
 
             return (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className={`relative text-sm font-medium transition-all duration-300 ${
                   isActive
                     ? "text-white"
@@ -98,7 +99,7 @@ export default function Navbar() {
                       : "w-0 group-hover:w-full"
                   }`}
                 />
-              </a>
+              </Link>
             );
           })}
 
@@ -113,6 +114,13 @@ export default function Navbar() {
             <Download size={18} />
             Download CV
           </a>
+
+          <Link
+            to="/login"
+            className="rounded-xl border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:border-white hover:bg-white hover:text-black"
+          >
+            Login
+          </Link>
         </nav>
 
         {/* Mobile Button */}
@@ -135,14 +143,14 @@ export default function Navbar() {
         <div className="border-t border-white/10 bg-black/95 px-6 py-6 backdrop-blur-xl">
           <div className="flex flex-col gap-6">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 onClick={closeMobileMenu}
                 className="text-gray-300 transition hover:text-white"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
 
             <a
@@ -154,6 +162,14 @@ export default function Navbar() {
               <Download size={18} />
               Download CV
             </a>
+
+            <Link
+              to="/login"
+              onClick={closeMobileMenu}
+              className="rounded-xl border border-white/20 px-5 py-3 text-center font-semibold text-white transition hover:border-white hover:bg-white hover:text-black"
+            >
+              Login
+            </Link>
           </div>
         </div>
       </div>
