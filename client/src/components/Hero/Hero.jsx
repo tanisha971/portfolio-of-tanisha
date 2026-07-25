@@ -5,6 +5,10 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
 import CodeIcon from '@mui/icons-material/Code';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import Tanisha_img from "../../assets/images/Tanisha_img.png";
+import { Typewriter } from "react-simple-typewriter";
 
 export default function Hero() {
   return (
@@ -51,12 +55,29 @@ export default function Hero() {
                 </span>
               </h1>
 
-              <div className="text-xl lg:text-2xl text-gray-300 space-y-2">
-                <p>Full Stack Developer</p>
-                <p className="text-gray-400">
-                  SIH 2024 National Winner | BTech CSE Student
-                </p>
+              <div className="space-y-2">
+              <div className="flex items-center text-xl lg:text-2xl font-semibold text-white min-h-[40px]">
+                <Typewriter
+                  words={[
+                    "Full Stack Developer",
+                    "Content Creator",
+                    "AI/ML Enthusiast",
+                    "UI/UX Designer",
+                    "Video Editor",
+                  ]}
+                  loop={0}
+                  cursor
+                  cursorStyle="|"
+                  typeSpeed={80}
+                  deleteSpeed={40}
+                  delaySpeed={1800}
+                />
               </div>
+
+              <p className="text-gray-400 text-lg">
+                SIH 2024 National Winner | BTech CSE Student
+              </p>
+            </div>
             </motion.div>
 
             <motion.p
@@ -96,31 +117,59 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.8 }}
-              className="flex gap-4"
+              className="flex flex-wrap gap-4"
             >
+              {/* GitHub */}
               <a
-                href="https://github.com/your-github"
+                href="https://github.com/tanisha971/"
                 target="_blank"
                 rel="noopener noreferrer"
+                title="GitHub"
                 className="p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/10"
               >
                 <GitHubIcon className="text-white" />
               </a>
 
+              {/* LinkedIn */}
               <a
-                href="https://linkedin.com/in/your-linkedin"
+                href="https://www.linkedin.com/in/tanisha-ali-727b02277/"
                 target="_blank"
                 rel="noopener noreferrer"
+                title="LinkedIn"
                 className="p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/10"
               >
-                <LinkedInIcon size={24} className="text-white" />
+                <LinkedInIcon className="text-white" />
               </a>
 
+              {/* Email */}
               <a
-                href="mailto:yourmail@gmail.com"
+                href="mailto:tanishaali67@gmail.com"
+                title="Email"
                 className="p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/10"
               >
-                <EmailIcon size={24} className="text-white" />
+                <EmailIcon className="text-white" />
+              </a>
+
+              {/* YouTube */}
+              <a
+                href="https://www.youtube.com/@tanishas_tech_world"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Tanisha's Tech World"
+                className="p-3 bg-white/10 rounded-lg hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/10"
+              >
+                <YouTubeIcon />
+              </a>
+
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/tanishas_tech_world/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Tanisha's Tech World"
+                className="p-3 bg-white/10 rounded-lg hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/10"
+              >
+                <InstagramIcon />
               </a>
             </motion.div>
           </motion.div>
@@ -137,14 +186,21 @@ export default function Hero() {
                 <div className="w-96 h-96 bg-gradient-to-r from-white/10 to-white/5 rounded-full blur-2xl animate-pulse"></div>
               </div>
 
-              <div className="relative z-10 p-20 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl">
-                <CodeIcon size={120} className="text-white" />
-              </div>
+              <div className="relative z-10">
+                <div className="absolute w-[430px] h-[430px] rounded-full bg-gradient-to-r from-white/20 via-white/5 to-transparent blur-3xl animate-pulse"></div>
+                  <div className="relative w-96 h-96 rounded-full overflow-hidden border-4 border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+                    <img
+                      src={Tanisha_img}
+                      alt="Tanisha Ali"
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                  </div>
+</div>
 
               <motion.div
                 animate={{ y: [0, -20, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
-                className="absolute top-10 right-10 p-4 bg-white/10 backdrop-blur-xl rounded-xl border border-white/10"
+                className="absolute top-12 right-4 p-4 bg-white/10 backdrop-blur-xl rounded-xl border border-white/10"
               >
                 <span className="text-white font-mono">React</span>
               </motion.div>
@@ -152,7 +208,7 @@ export default function Hero() {
               <motion.div
                 animate={{ y: [0, -15, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
-                className="absolute bottom-20 right-20 p-4 bg-white/10 backdrop-blur-xl rounded-xl border border-white/10"
+                className="absolute bottom-24 right-0 p-4 bg-white/10 backdrop-blur-xl rounded-xl border border-white/10"
               >
                 <span className="text-white font-mono">Node.js</span>
               </motion.div>
@@ -160,7 +216,7 @@ export default function Hero() {
               <motion.div
                 animate={{ y: [0, -18, 0] }}
                 transition={{ duration: 2.8, repeat: Infinity, delay: 1 }}
-                className="absolute bottom-10 left-10 p-4 bg-white/10 backdrop-blur-xl rounded-xl border border-white/10"
+                className="absolute bottom-16 left-0 p-4 bg-white/10 backdrop-blur-xl rounded-xl border border-white/10"
               >
                 <span className="text-white font-mono">MongoDB</span>
               </motion.div>

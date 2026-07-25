@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Download, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
-// import resume from "../../assets/resume/Tanisha_Ali_Resume.pdf";
+import resume from "../../assets/resume/Tanisha_Ali_Resume.pdf";
 
 const navLinks = [
   { name: "Home", href: "/home", anchor: "home" },
@@ -106,9 +106,8 @@ export default function Navbar() {
           {/* Resume */}
 
           <a
-            // href={resume}
-            // download
-            href="#"
+            href={resume}
+            download
             className="flex items-center gap-2 rounded-xl border border-white bg-white px-5 py-2.5 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:bg-gray-200"
           >
             <Download size={18} />

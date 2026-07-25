@@ -4,6 +4,9 @@ import { useState } from 'react';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookIcon from "@mui/icons-material/Facebook";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -28,15 +31,10 @@ export default function Contact() {
     {
       icon: EmailIcon,
       label: 'Email',
-      value: 'tanisha.ali@example.com',
-      href: 'mailto:tanisha.ali@example.com',
+      value: 'tanishaali67@gmail.com',
+      href: 'mailto:tanishaali67@gmail.com',
     },
-    {
-      icon: Phone,
-      label: 'Phone',
-      value: '+91 98765 43210',
-      href: 'tel:+919876543210',
-    },
+    
     {
       icon: MapPin,
       label: 'Location',
@@ -46,9 +44,12 @@ export default function Contact() {
   ];
 
   const socialLinks = [
-    { icon: GitHubIcon, label: 'GitHub', href: 'https://github.com' },
-    { icon: LinkedInIcon, label: 'LinkedIn', href: 'https://linkedin.com' },
-    { icon: EmailIcon, label: 'Email', href: 'mailto:tanisha.ali@example.com' },
+    { icon: GitHubIcon, label: 'GitHub', href: 'https://github.com/tanisha971' },
+    { icon: LinkedInIcon, label: 'LinkedIn', href: 'https://linkedin.com/in/tanisha-ali-727b02277/' },
+    { icon: EmailIcon, label: 'Email', href: 'mailto:tanishaali67@gmail.com' },
+    { icon: YouTubeIcon, label: 'YouTube', href: 'https://youtube.com/@tanishas_tech_world' },
+    { icon: InstagramIcon, label: 'Instagram', href: 'https://instagram.com/tanishas_tech_world' },
+    { icon: FacebookIcon, label: 'Facebook', href: 'https://www.facebook.com/tanishastechworld/' },
   ];
 
   return (
