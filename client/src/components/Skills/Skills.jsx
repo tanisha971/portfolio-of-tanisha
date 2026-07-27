@@ -115,6 +115,8 @@ export default function Skills() {
               'MongoDB',
               'Tailwind CSS',
               'Material UI',
+              'HTML',
+              'CSS',
               'JavaScript',
               'Java',
               'C++',

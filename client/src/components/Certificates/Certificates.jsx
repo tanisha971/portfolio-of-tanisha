@@ -1,5 +1,14 @@
 import { motion } from 'motion/react';
 import { Award, Download, Eye } from 'lucide-react';
+import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  EffectCoverflow,
+  Pagination,
+} from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/effect-coverflow";
 
 export default function Certificates() {
   const certificates = [
@@ -50,48 +59,104 @@ export default function Certificates() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {certificates.map((cert, index) => (
-            <motion.div
-              key={cert.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300 hover:transform hover:scale-[1.02]"
-            >
-              {/* Certificate Preview Area */}
-              <div className="mb-6 h-48 bg-white/10 rounded-xl flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-all overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent group-hover:from-white/10 transition-all"></div>
-                <Award size={64} className="text-white/30 group-hover:text-white/40 transition-colors relative z-10" />
-              </div>
+        <Swiper
+  modules={[EffectCoverflow, Pagination]}
+  effect="coverflow"
+  centeredSlides={true}
+  grabCursor={true}
+  loop={true}
+  pagination={{
+    clickable: true,
+  }}
+  coverflowEffect={{
+    rotate: 0,
+    stretch: 0,
+    depth: 180,
+    modifier: 1.5,
+    scale: 0.9,
+    slideShadows: false,
+  }}
+  breakpoints={{
+    0: {
+      slidesPerView: 1.1,
+    },
+    768: {
+      slidesPerView: 1.8,
+    },
+    1200: {
+      slidesPerView: 2.3,
+    },
+  }}
+>
+  {certificates.map((cert, index) => (
+    <SwiperSlide key={cert.title}>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{
+          duration: 0.5,
+          delay: index * 0.1,
+        }}
+        className="group relative bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300"
+      >
+        {/* Certificate Preview */}
+        <div className="mb-6 h-56 rounded-xl overflow-hidden border border-white/10 bg-white/10">
 
-              {/* Certificate Info */}
-              <div className="space-y-3 mb-6">
-                <h3 className="text-xl font-bold text-white group-hover:text-gray-100 transition-colors">
-                  {cert.title}
-                </h3>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-300">{cert.issuer}</span>
-                  <span className="text-gray-400">{cert.date}</span>
-                </div>
-                <p className="text-gray-300 text-sm leading-relaxed">{cert.description}</p>
-              </div>
+          <img
+            src={cert.image}
+            alt={cert.title}
+            className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+          />
 
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-black rounded-lg hover:bg-gray-200 transition-all duration-300 text-sm font-medium">
-                  <Eye size={16} />
-                  <span>Preview</span>
-                </button>
-                <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all duration-300 border border-white/10 text-sm font-medium">
-                  <Download size={16} />
-                  <span>Download</span>
-                </button>
-              </div>
-            </motion.div>
-          ))}
         </div>
+
+        <div className="space-y-3 mb-6">
+          <h3 className="text-xl font-bold text-white">
+            {cert.title}
+          </h3>
+
+          <div className="flex justify-between text-sm">
+
+            <span className="text-gray-300">
+              {cert.issuer}
+            </span>
+
+            <span className="text-gray-400">
+              {cert.date}
+            </span>
+
+          </div>
+
+          <p className="text-gray-300 text-sm leading-7">
+            {cert.description}
+          </p>
+
+        </div>
+
+        <div className="flex gap-3">
+
+          <button className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-white py-3 text-black font-semibold hover:bg-gray-200 transition">
+
+            <Eye size={18} />
+
+            Preview
+
+          </button>
+
+          <button className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/10 py-3 text-white font-semibold hover:bg-white/20 transition">
+
+            <Download size={18} />
+
+            Download
+
+          </button>
+
+        </div>
+      </motion.div>
+    </SwiperSlide>
+  ))}
+</Swiper>
 
         {/* Additional Info */}
         <motion.div

@@ -1,46 +1,83 @@
+import { useState } from "react";
 import { motion } from 'motion/react';
 import { ExternalLink } from 'lucide-react';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import ProjectCard from "./ProjectCard";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/effect-coverflow";
+import udayaam1 from "../../assets/images/udayaam1.jpeg";
+import udayaam2 from "../../assets/images/udayaam2.jpeg";
+import udayaam3 from "../../assets/images/udayaam3.jpeg";
+import udayaam4 from "../../assets/images/udayaam4.jpeg";
 
 export default function Projects() {
+  
   const projects = [
     {
       title: 'Udayaam',
+      images: [
+        udayaam1
+      ],
       description:
         'Smart India Hackathon 2024 National Winner project. A comprehensive platform designed to empower rural entrepreneurship through digital solutions and resource accessibility.',
       tech: ['React', 'Node.js', 'MongoDB', 'Express', 'Tailwind CSS'],
+      github: "#",
       category: 'SIH Winner',
       featured: true,
     },
     {
       title: 'Pinio AI Musical Learning',
+      images: [
+        udayaam1
+      ],
       description:
         'An innovative AI-powered platform for musical education, providing personalized learning experiences and interactive lessons for aspiring musicians.',
       tech: ['React', 'AI/ML', 'Node.js', 'MongoDB'],
+      github: "#",
+      live: "#",
       category: 'AI/ML',
       featured: true,
     },
     {
       title: 'Civix Civic-Tech Platform',
+      images: [
+        udayaam1
+      ],
       description:
         'A civic engagement platform connecting citizens with local government services, enabling transparency and efficient public service delivery.',
       tech: ['MERN Stack', 'REST API', 'Material UI'],
+      github: "#",
+      live: "#",
       category: 'Full Stack',
       featured: true,
     },
     {
       title: 'Real Estate MERN Platform',
+      images: [
+        udayaam1
+      ],
       description:
         'Complete real estate management system with property listings, search functionality, user authentication, and advanced filtering options.',
       tech: ['MongoDB', 'Express', 'React', 'Node.js', 'JWT'],
+      github: "#",
+      live: "#",
       category: 'Full Stack',
       featured: false,
     },
     {
       title: 'PoolCarz Carpooling App',
+      images: [
+        udayaam1
+      ],
       description:
         'Sustainable transportation solution enabling users to share rides, reduce carbon footprint, and save costs through an intuitive mobile-first platform.',
       tech: ['React', 'Node.js', 'MongoDB', 'Google Maps API'],
+      github: "#",
+      live: "#",
       category: 'Full Stack',
       featured: false,
     },
@@ -67,69 +104,52 @@ export default function Projects() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-white/30 transition-all duration-500 hover:transform hover:scale-[1.02] ${
-                project.featured ? 'lg:col-span-1' : ''
-              }`}
-            >
-              {/* Category Badge */}
-              <div className="absolute top-4 right-4 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full border border-white/20">
-                <span className="text-xs text-white font-medium">{project.category}</span>
-              </div>
+        <Swiper
+            modules={[EffectCoverflow,Navigation, Pagination]}
+            effect="coverflow"
+            centeredSlides={true}
+            grabCursor={true}
+            loop={true}
+            navigation
+            pagination={{ clickable: true }}
+            coverflowEffect={{
+                rotate: 0,
+                stretch: 0,
+                depth: 180,
+                modifier: 1.5,
+                slideShadows: false,
+                scale: 0.88,
+            }}
+            
+            breakpoints={{
+                0: {
+                    slidesPerView: 1.1,
+                },
+                768: {
+                    slidesPerView: 1.8,
+                },
+                1200: {
+                    slidesPerView: 2.4,
+                },
+            }}
+        >
 
-              {/* Glow Effect on Hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 group-hover:to-white/10 rounded-2xl transition-all duration-500"></div>
+            {projects.map((project, index) => (
 
-              <div className="relative z-10 space-y-6">
-                {/* Project Icon/Mockup Placeholder */}
-                <div className="w-full h-48 bg-white/10 rounded-xl flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-all">
-                  <div className="text-6xl text-white/30">💻</div>
-                </div>
+                <SwiperSlide key={project.title}>
 
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-gray-100 transition-colors">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed text-sm">
-                    {project.description}
-                  </p>
-                </div>
+                    <ProjectCard
+                        project={project}
+                        index={index}
+                    />
 
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2">
-                  {project.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 bg-white/10 rounded-lg text-gray-300 text-xs border border-white/10"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+                </SwiperSlide>
 
-                {/* Action Buttons */}
-                <div className="flex gap-3 pt-4">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition-all duration-300 text-sm font-medium">
-                    <GitHubIcon size={16} />
-                    <span>Code</span>
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all duration-300 border border-white/10 text-sm font-medium">
-                    <ExternalLink size={16} />
-                    <span>Live</span>
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+            ))}
+
+        </Swiper>
       </div>
+      
     </section>
   );
 }
