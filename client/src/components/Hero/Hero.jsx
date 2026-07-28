@@ -136,7 +136,7 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="LinkedIn"
-                className="p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/10"
+                className="p-3 bg-white/10 rounded-lg hover:bg-[#0a66c2] transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/10"
               >
                 <LinkedInIcon className="text-white" />
               </a>

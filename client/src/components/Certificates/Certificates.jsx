@@ -98,7 +98,7 @@ export default function Certificates() {
           duration: 0.5,
           delay: index * 0.1,
         }}
-        className="group relative bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300"
+        className="group relative mx-auto w-full max-w-[420px] bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300"
       >
         {/* Certificate Preview */}
         <div className="mb-6 h-56 rounded-xl overflow-hidden border border-white/10 bg-white/10">

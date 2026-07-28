@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from 'motion/react';
 import { ExternalLink } from 'lucide-react';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -9,79 +9,26 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
-import udayaam1 from "../../assets/images/udayaam1.jpeg";
-import udayaam2 from "../../assets/images/udayaam2.jpeg";
-import udayaam3 from "../../assets/images/udayaam3.jpeg";
-import udayaam4 from "../../assets/images/udayaam4.jpeg";
+import { getProjects } from "../../services/projectService";
 
 export default function Projects() {
-  
-  const projects = [
-    {
-      title: 'Udayaam',
-      images: [
-        udayaam1
-      ],
-      description:
-        'Smart India Hackathon 2024 National Winner project. A comprehensive platform designed to empower rural entrepreneurship through digital solutions and resource accessibility.',
-      tech: ['React', 'Node.js', 'MongoDB', 'Express', 'Tailwind CSS'],
-      github: "#",
-      category: 'SIH Winner',
-      featured: true,
-    },
-    {
-      title: 'Pinio AI Musical Learning',
-      images: [
-        udayaam1
-      ],
-      description:
-        'An innovative AI-powered platform for musical education, providing personalized learning experiences and interactive lessons for aspiring musicians.',
-      tech: ['React', 'AI/ML', 'Node.js', 'MongoDB'],
-      github: "#",
-      live: "#",
-      category: 'AI/ML',
-      featured: true,
-    },
-    {
-      title: 'Civix Civic-Tech Platform',
-      images: [
-        udayaam1
-      ],
-      description:
-        'A civic engagement platform connecting citizens with local government services, enabling transparency and efficient public service delivery.',
-      tech: ['MERN Stack', 'REST API', 'Material UI'],
-      github: "#",
-      live: "#",
-      category: 'Full Stack',
-      featured: true,
-    },
-    {
-      title: 'Real Estate MERN Platform',
-      images: [
-        udayaam1
-      ],
-      description:
-        'Complete real estate management system with property listings, search functionality, user authentication, and advanced filtering options.',
-      tech: ['MongoDB', 'Express', 'React', 'Node.js', 'JWT'],
-      github: "#",
-      live: "#",
-      category: 'Full Stack',
-      featured: false,
-    },
-    {
-      title: 'PoolCarz Carpooling App',
-      images: [
-        udayaam1
-      ],
-      description:
-        'Sustainable transportation solution enabling users to share rides, reduce carbon footprint, and save costs through an intuitive mobile-first platform.',
-      tech: ['React', 'Node.js', 'MongoDB', 'Google Maps API'],
-      github: "#",
-      live: "#",
-      category: 'Full Stack',
-      featured: false,
-    },
-  ];
+  const [projects, setProjects] = useState([]);
+
+  const loadProjects = async () => {
+  try {
+    const response = await getProjects();
+
+console.log("Projects API:", response);
+
+setProjects(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  useEffect(() => {
+    loadProjects();
+}, []);
 
   return (
     <section id="projects" className="py-24 px-6 lg:px-8 relative overflow-hidden">

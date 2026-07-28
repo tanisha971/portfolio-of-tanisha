@@ -37,7 +37,7 @@ export default function Footer() {
     { icon: LinkedInIcon, href: 'https://linkedin.com/in/tanisha-ali-727b02277/', label: 'LinkedIn', hover: "hover:text-[#0A66C2] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]", },
     { icon: EmailIcon, href: 'mailto:tanishaali67@gmail.com', label: 'Email', hover: "hover:text-red-400 hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]", },
     { icon: YouTubeIcon, label: 'YouTube', href: 'https://youtube.com/@tanishas_tech_world', hover: "hover:text-[#FF0000] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]", },
-    { icon: InstagramIcon, label: 'Instagram', href: 'https://instagram.com/tanishas_tech_world', hover: "hover:text-[#E4405F] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]", },
+    { icon: InstagramIcon, label: 'Instagram', href: 'https://instagram.com/tanishas_tech_world', hover: "hover:text-pink-600 hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]", },
     { icon: FacebookIcon, label: 'Facebook', href: 'https://www.facebook.com/tanishastechworld/', hover: "hover:text-[#1877F2] hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]", },
   ];
 
