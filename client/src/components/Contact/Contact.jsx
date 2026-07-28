@@ -80,7 +80,7 @@ export default function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10"
+            className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 md:p-8 border border-white/10"
           >
             <h3 className="text-2xl font-bold text-white mb-6">Send Message</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -160,7 +160,7 @@ export default function Contact() {
                       {info.href ? (
                         <a
                           href={info.href}
-                          className="text-white hover:text-gray-300 transition-colors"
+                          className="text-white hover:text-gray-300 transition-colors break-all"
                         >
                           {info.value}
                         </a>
@@ -175,14 +175,14 @@ export default function Contact() {
 
             <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
               <h3 className="text-2xl font-bold text-white mb-6">Social Links</h3>
-              <div className="flex gap-4">
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
                 {socialLinks.map((social) => (
                   <a
                     key={social.label}
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-4 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-110 border border-white/10"
+                    className="flex items-center justify-center p-4 bg-white/10 rounded-xl border border-white/10 transition-all duration-300 hover:bg-white/20 hover:scale-105"
                     aria-label={social.label}
                   >
                     <social.icon size={24} className="text-white" />
