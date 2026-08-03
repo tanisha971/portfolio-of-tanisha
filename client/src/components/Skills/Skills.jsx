@@ -1,47 +1,33 @@
+import { useEffect, useState } from "react";
+import { getSkills } from "../../services/skillService";
 import { motion } from 'motion/react';
 
 export default function Skills() {
-  const skillCategories = [
-    {
-      category: 'Frontend',
-      skills: [
-        { name: 'React', level: 90 },
-        { name: 'Tailwind CSS', level: 85 },
-        { name: 'Material UI', level: 80 },
-        { name: 'JavaScript', level: 88 },
-      ],
-    },
-    {
-      category: 'Backend',
-      skills: [
-        { name: 'Node.js', level: 85 },
-        { name: 'Express.js', level: 82 },
-      ],
-    },
-    {
-      category: 'Database',
-      skills: [
-        { name: 'MongoDB', level: 80 },
-      ],
-    },
-    {
-      category: 'Languages',
-      skills: [
-        { name: 'Java', level: 85 },
-        { name: 'C', level: 75 },
-        { name: 'C++', level: 78 },
-      ],
-    },
-    {
-      category: 'Tools & Technologies',
-      skills: [
-        { name: 'GitHub', level: 90 },
-        { name: 'Figma', level: 75 },
-        { name: 'REST APIs', level: 85 },
-        { name: 'JWT', level: 80 },
-      ],
-    },
-  ];
+  const [skills, setSkills] = useState([]);
+
+  useEffect(() => {
+    loadSkills();
+  }, []);
+
+  const loadSkills = async () => {
+    const data = await getSkills();
+    setSkills(data);
+  };
+
+  const skillCategories = Object.values(
+    skills.reduce((acc, skill) => {
+      if (!acc[skill.category]) {
+        acc[skill.category] = {
+          category: skill.category,
+          skills: [],
+        };
+      }
+
+      acc[skill.category].skills.push(skill);
+
+      return acc;
+    }, {})
+  );
 
   return (
     <section id="skills" className="py-24 px-6 lg:px-8 relative overflow-hidden">
@@ -108,28 +94,9 @@ export default function Skills() {
         >
           <h3 className="text-2xl font-bold text-white text-center mb-8">Tech Stack</h3>
           <div className="flex flex-wrap justify-center gap-4">
-            {[
-              'React',
-              'Node.js',
-              'Express',
-              'MongoDB',
-              'Tailwind CSS',
-              'Material UI',
-              'HTML',
-              'CSS',
-              'JavaScript',
-              'Java',
-              'C++',
-              'GitHub',
-              'Figma',
-              'REST API',
-              'JWT',
-              'Git',
-              'VS Code',
-              'Postman',
-            ].map((tech, index) => (
+            {skills.map((skill, index) => (
               <motion.div
-                key={tech}
+                key={skill._id}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -137,7 +104,7 @@ export default function Skills() {
                 whileHover={{ scale: 1.1 }}
                 className="px-6 py-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/10 hover:border-white/30 transition-all duration-300"
               >
-                <span className="text-gray-200 font-medium">{tech}</span>
+                <span className="text-gray-200 font-medium">{skill.name}</span>
               </motion.div>
             ))}
           </div>

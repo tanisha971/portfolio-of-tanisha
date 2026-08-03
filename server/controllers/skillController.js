@@ -1,9 +1,5 @@
 import Skill from "../models/Skill.js";
 
-/*
-GET ALL
-*/
-
 export const getSkills = async (req, res) => {
   try {
     const skills = await Skill.find().sort({
@@ -11,21 +7,17 @@ export const getSkills = async (req, res) => {
       order: 1,
     });
 
-    res.status(200).json({
+    res.json({
       success: true,
       data: skills,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 };
-
-/*
-CREATE
-*/
 
 export const createSkill = async (req, res) => {
   try {
@@ -35,17 +27,13 @@ export const createSkill = async (req, res) => {
       success: true,
       data: skill,
     });
-  } catch (error) {
-    res.status(500).json({
+  } catch (err) {
+    res.status(400).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 };
-
-/*
-UPDATE
-*/
 
 export const updateSkill = async (req, res) => {
   try {
@@ -54,7 +42,6 @@ export const updateSkill = async (req, res) => {
       req.body,
       {
         new: true,
-        runValidators: true,
       }
     );
 
@@ -62,17 +49,13 @@ export const updateSkill = async (req, res) => {
       success: true,
       data: skill,
     });
-  } catch (error) {
-    res.status(500).json({
+  } catch (err) {
+    res.status(400).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 };
-
-/*
-DELETE
-*/
 
 export const deleteSkill = async (req, res) => {
   try {
@@ -80,12 +63,12 @@ export const deleteSkill = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Skill Deleted",
+      message: "Skill deleted",
     });
-  } catch (error) {
-    res.status(500).json({
+  } catch (err) {
+    res.status(400).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 };

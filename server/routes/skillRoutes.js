@@ -1,4 +1,4 @@
-import express from "express";
+import { Router } from "express";
 
 import {
   getSkills,
@@ -7,14 +7,16 @@ import {
   deleteSkill,
 } from "../controllers/skillController.js";
 
-const router = express.Router();
+import { protect } from "../middleware/authMiddleware.js";
+
+const router = Router();
 
 router.get("/", getSkills);
 
-router.post("/", createSkill);
+router.post("/", protect, createSkill);
 
-router.put("/:id", updateSkill);
+router.put("/:id", protect, updateSkill);
 
-router.delete("/:id", deleteSkill);
+router.delete("/:id", protect, deleteSkill);
 
 export default router;
