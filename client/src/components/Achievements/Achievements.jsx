@@ -1,49 +1,28 @@
+import { useEffect, useState } from "react";
+import { getAchievements } from "../../services/achievementService";
 import { motion } from 'motion/react';
 import { Trophy, Star, Award, Target } from 'lucide-react';
 
 export default function Achievements() {
-  const achievements = [
-    {
-      icon: Trophy,
-      title: 'Smart India Hackathon 2024',
-      subtitle: 'National Winner',
-      description:
-        'Won the prestigious Smart India Hackathon 2024 with project "Udayaam" among thousands of teams nationwide.',
-      color: 'from-yellow-500/20 to-yellow-600/20',
-    },
-    {
-      icon: Star,
-      title: 'Walmart Sparkathon',
-      subtitle: 'Participant',
-      description:
-        'Selected to participate in Walmart Sparkathon, competing with top engineering talent on innovative retail solutions.',
-      color: 'from-blue-500/20 to-blue-600/20',
-    },
-    {
-      icon: Award,
-      title: 'Adobe Hackathon',
-      subtitle: 'Preparation & Participation',
-      description:
-        'Prepared and participated in Adobe Hackathon, focusing on creative tech solutions and design thinking.',
-      color: 'from-red-500/20 to-red-600/20',
-    },
-    {
-      icon: Target,
-      title: 'Flipkart Grid',
-      subtitle: 'Preparation & Participation',
-      description:
-        'Engaged in Flipkart Grid hackathon, working on e-commerce innovation and scalable solutions.',
-      color: 'from-purple-500/20 to-purple-600/20',
-    },
-    {
-      icon: Award,
-      title: 'Multiple Internships',
-      subtitle: 'Professional Experience',
-      description:
-        'Successfully completed 3+ internships at reputed organizations including InternPe, CodSoft, and Infosys Springboard.',
-      color: 'from-green-500/20 to-green-600/20',
-    },
-  ];
+  const [achievements, setAchievements] = useState([]);
+
+  useEffect(() => {
+      loadAchievements();
+  }, []);
+
+  const loadAchievements = async () => {
+      const data = await getAchievements();
+      setAchievements(data);
+  };
+
+  const icons = {
+    Trophy,
+    Star,
+    Award,
+    Target,
+  };
+
+  const Icon = icons[achievements.icon] || Award;
 
   return (
     <section id="achievements" className="py-24 px-6 lg:px-8 relative overflow-hidden">
@@ -83,7 +62,10 @@ export default function Achievements() {
               <div className="relative z-10 space-y-4">
                 {/* Icon */}
                 <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-all">
-                  <achievement.icon size={32} className="text-white" />
+                  <Icon
+                      size={32}
+                      className="text-white"
+                  />
                 </div>
 
                 {/* Content */}
