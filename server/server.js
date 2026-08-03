@@ -8,6 +8,7 @@ import skillRoutes from "./routes/skillRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import experienceRoutes from "./routes/experienceRoutes.js";
 import achievementRoutes from "./routes/achievementRoutes.js";
+import certificateRoutes from "./routes/certificateRoutes.js";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use("/api/skills", skillRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/experience", experienceRoutes);
 app.use("/api/achievements", achievementRoutes);
+app.use("/api/certificates", certificateRoutes);
 
 const PORT = process.env.PORT || 5000;
 

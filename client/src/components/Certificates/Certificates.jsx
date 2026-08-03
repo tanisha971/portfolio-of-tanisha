@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { getCertificates } from "../../services/certificateService";
 import { motion } from 'motion/react';
 import { Award, Download, Eye } from 'lucide-react';
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,32 +13,16 @@ import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 
 export default function Certificates() {
-  const certificates = [
-    {
-      title: 'Full Stack Web Developer',
-      issuer: 'Infosys Springboard',
-      date: 'May 2024',
-      description: 'Comprehensive full-stack development certification covering MERN stack and modern web technologies.',
-    },
-    {
-      title: 'Java Programming',
-      issuer: 'CodSoft',
-      date: 'July 2024',
-      description: 'Advanced Java programming certification covering OOP, data structures, and application development.',
-    },
-    {
-      title: 'JavaScript Suite',
-      issuer: 'InternPe',
-      date: 'August 2024',
-      description: 'Complete JavaScript certification including ES6+, async programming, and modern frameworks.',
-    },
-    {
-      title: 'C Programming',
-      issuer: 'Online Learning Platform',
-      date: 'March 2024',
-      description: 'Foundational C programming certification covering data structures and algorithms.',
-    },
-  ];
+  const [certificates, setCertificates] = useState([]);
+
+  useEffect(() => {
+      loadCertificates();
+  }, []);
+
+  const loadCertificates = async () => {
+      const data = await getCertificates();
+      setCertificates(data);
+  };
 
   return (
     <section id="certificates" className="py-24 px-6 lg:px-8 relative overflow-hidden">
@@ -136,21 +122,24 @@ export default function Certificates() {
 
         <div className="flex gap-3">
 
-          <button className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-white py-3 text-black font-semibold hover:bg-gray-200 transition">
+          <a
+              href={cert.pdf}
+              target="_blank"
+              rel="noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-white py-3 text-black font-semibold hover:bg-gray-200 transition"
+          >
+              <Eye size={18}/>
+              Preview
+          </a>
 
-            <Eye size={18} />
-
-            Preview
-
-          </button>
-
-          <button className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/10 py-3 text-white font-semibold hover:bg-white/20 transition">
-
-            <Download size={18} />
-
-            Download
-
-          </button>
+          <a
+              href={cert.pdf}
+              download
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/10 py-3 text-white font-semibold hover:bg-white/20 transition"
+          >
+              <Download size={18}/>
+              Download
+          </a>
 
         </div>
       </motion.div>
