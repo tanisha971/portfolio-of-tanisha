@@ -1,36 +1,19 @@
+import { useEffect, useState } from "react";
+import { getExperiences } from "../../services/experienceService";
 import { motion } from 'motion/react';
 import { Briefcase, Calendar, Award } from 'lucide-react';
 
 export default function Experience() {
-  const experiences = [
-    {
-      company: 'InternPe',
-      role: 'Web Development Intern',
-      duration: 'Jun 2024 - Aug 2024',
-      description:
-        'Developed responsive web applications using modern frameworks. Collaborated with cross-functional teams to deliver high-quality features. Gained hands-on experience in full-stack development.',
-      tech: ['React', 'Node.js', 'MongoDB', 'Express'],
-      certificate: true,
-    },
-    {
-      company: 'CodSoft',
-      role: 'Web Development Intern',
-      duration: 'May 2024 - Jul 2024',
-      description:
-        'Built interactive user interfaces and implemented RESTful APIs. Enhanced website performance and user experience. Worked on multiple client projects.',
-      tech: ['JavaScript', 'CSS', 'HTML', 'Bootstrap'],
-      certificate: true,
-    },
-    {
-      company: 'Infosys Springboard',
-      role: 'Full Stack Development Intern',
-      duration: 'Mar 2024 - May 2024',
-      description:
-        'Completed comprehensive full-stack development training. Developed end-to-end web applications. Learned industry best practices and modern development workflows.',
-      tech: ['MERN Stack', 'REST API', 'Git', 'Agile'],
-      certificate: true,
-    },
-  ];
+  const [experiences, setExperiences] = useState([]);
+
+  useEffect(() => {
+    loadExperiences();
+  }, []);
+
+  const loadExperiences = async () => {
+    const data = await getExperiences();
+    setExperiences(data);
+  };
 
   return (
     <section id="experience" className="py-24 px-6 lg:px-8 relative overflow-hidden">
