@@ -64,11 +64,16 @@ export default function Experience() {
                         <span className="text-sm">{exp.duration}</span>
                       </div>
                     </div>
-                    {exp.certificate && (
-                      <button className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all duration-300 border border-white/10 w-fit">
+                    {exp.certificate && exp.certificateUrl && (
+                      <a
+                        href={exp.certificateUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all duration-300 border border-white/10 w-fit"
+                      >
                         <Award size={18} />
                         <span className="text-sm">View Certificate</span>
-                      </button>
+                      </a>
                     )}
                   </div>
 

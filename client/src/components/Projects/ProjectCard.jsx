@@ -33,11 +33,14 @@ export default function ProjectCard({
         {/* Carousel */}
         <div className="overflow-hidden rounded-2xl">
 
-    <img
+    {/* Project Image */}
+    <div className="overflow-hidden rounded-2xl">
+      <img
         src={project.image}
         alt={project.title}
         className="aspect-video w-full object-cover rounded-2xl transition duration-500 group-hover:scale-105"
-    />
+      />
+    </div>
 
 </div>
 

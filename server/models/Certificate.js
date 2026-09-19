@@ -22,14 +22,9 @@ const certificateSchema = new mongoose.Schema(
       required: true,
     },
 
-    image: {
+    imageUrl: {
       type: String,
-      default: "",
-    },
-
-    pdf: {
-      type: String,
-      default: "",
+      required: true,
     },
 
     order: {
