@@ -2,7 +2,31 @@ import Certificate from "../models/Certificate.js";
 
 export const getCertificates = async (req, res) => {
   try {
-    const certificates = await Certificate.find().sort({ order: 1 });
+    const { year, category } = req.query;
+
+    const filter = {};
+
+    // Category filter
+    if (category && category !== "All") {
+      filter.category = category;
+    }
+
+    // Year filter
+    if (year && year !== "All") {
+      const startDate = new Date(`${year}-01-01T00:00:00.000Z`);
+      const endDate = new Date(
+        `${Number(year) + 1}-01-01T00:00:00.000Z`
+      );
+
+      filter.date = {
+        $gte: startDate,
+        $lt: endDate,
+      };
+    }
+
+    const certificates = await Certificate.find(filter).sort({
+      date: -1,
+    });
 
     res.json({
       success: true,
@@ -39,6 +63,7 @@ export const updateCertificate = async (req, res) => {
       req.body,
       {
         new: true,
+        runValidators: true,
       }
     );
 

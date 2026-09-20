@@ -1,7 +1,10 @@
 import api from "./api";
 
-export const getCertificates = async () => {
-  const res = await api.get("/certificates");
+export const getCertificates = async (filters = {}) => {
+  const res = await api.get("/certificates", {
+    params: filters,
+  });
+
   return res.data.data;
 };
 

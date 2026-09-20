@@ -2,10 +2,7 @@ import { motion } from "motion/react";
 import { ExternalLink } from "lucide-react";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
-export default function ProjectCard({
-  project,
-  index,
-}) {
+export default function ProjectCard({ project, index }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -21,30 +18,78 @@ export default function ProjectCard({
       {/* Hover Glow */}
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent via-transparent to-white/5 opacity-0 transition duration-500 group-hover:opacity-100" />
 
-      {/* Category Badge */}
-      <div className="absolute right-5 top-5 z-20 rounded-full border border-white/20 bg-black/40 px-4 py-1 backdrop-blur-xl">
-        <span className="text-xs font-medium text-white">
-          {project.category}
-        </span>
+      {/* Top Overlay */}
+      <div className="absolute left-5 right-5 top-5 z-20 flex items-start justify-between">
+
+        {/* Category Badge - Top Left */}
+        <div className="rounded-full border border-white/20 bg-black/50 px-4 py-1.5 backdrop-blur-xl">
+          <span className="text-xs font-medium text-white">
+            {project.category}
+          </span>
+        </div>
+
+        {/* Action Icons - Top Right */}
+        <div className="flex gap-2">
+
+          {/* GitHub */}
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="View Source Code"
+              className="flex h-10 w-10 items-center justify-center rounded-full
+                border border-white/20
+                bg-black/50
+                text-white
+                backdrop-blur-md
+                transition-all duration-300
+                hover:bg-white
+                hover:text-black
+                hover:border-white
+                hover:scale-105"
+            >
+              <GitHubIcon fontSize="small" />
+            </a>
+          )}
+
+          {/* Live */}
+          {project.live && (
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="View Live Project"
+              className="flex h-10 w-10 items-center justify-center rounded-full
+                border border-white/20
+                bg-black/50
+                text-white
+                backdrop-blur-md
+                transition-all duration-300
+                hover:bg-white
+                hover:text-black
+                hover:border-white
+                hover:scale-105"
+            >
+              <ExternalLink size={18} />
+            </a>
+          )}
+
+        </div>
       </div>
 
       <div className="relative z-10 p-6 space-y-6">
 
-        {/* Carousel */}
+        {/* Project Image */}
         <div className="overflow-hidden rounded-2xl">
+          <img
+            src={project.image}
+            alt={project.title}
+            className="aspect-video w-full rounded-2xl object-cover transition duration-500 group-hover:scale-105"
+          />
+        </div>
 
-    {/* Project Image */}
-    <div className="overflow-hidden rounded-2xl">
-      <img
-        src={project.image}
-        alt={project.title}
-        className="aspect-video w-full object-cover rounded-2xl transition duration-500 group-hover:scale-105"
-      />
-    </div>
-
-</div>
-
-        {/* Title */}
+        {/* Title & Description */}
         <div>
           <h3 className="text-2xl font-bold text-white">
             {project.title}
@@ -66,36 +111,6 @@ export default function ProjectCard({
             </span>
           ))}
         </div>
-
-        {/* Buttons */}
-
-        <div className="flex gap-3 pt-2">
-
-    <a
-        href={project.github}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white py-3 font-semibold text-black transition hover:bg-gray-200"
-    >
-        <GitHubIcon fontSize="small" />
-        Code
-    </a>
-
-    {project.live && (
-
-        <a
-            href={project.live}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/10 py-3 font-semibold text-white transition hover:bg-white/20"
-        >
-            <ExternalLink size={18} />
-            Live
-        </a>
-
-    )}
-
-</div>
 
       </div>
     </motion.div>
