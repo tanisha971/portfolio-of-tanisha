@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Download, Menu, X, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
-import resume from "../../assets/resume/Tanisha_Ali_Resume.pdf";
+import { getResume } from "../../services/assetService";
+
+// ----------------------------------------
+// Navigation Links
+// ----------------------------------------
 
 const primaryLinks = [
   { name: "Home", href: "/home", anchor: "home" },
@@ -14,17 +18,96 @@ const primaryLinks = [
 ];
 
 const moreLinks = [
-  
-  { name: "Coding Profiles", href: "/coding-profiles", anchor: "coding-profiles" },
-  { name: "Content Creation", href: "/content-creation", anchor: "content-creation" },
-  { name: "Contact", href: "/contact", anchor: "contact" },
+  {
+    name: "Coding Profiles",
+    href: "/coding-profiles",
+    anchor: "coding-profiles",
+  },
+  {
+    name: "Content Creation",
+    href: "/content-creation",
+    anchor: "content-creation",
+  },
+  {
+    name: "Contact",
+    href: "/contact",
+    anchor: "contact",
+  },
 ];
+
+// ----------------------------------------
+// Google Drive Helpers
+// ----------------------------------------
+
+const getDriveFileId = (url) => {
+  if (!url) return null;
+
+  // Format:
+  // https://drive.google.com/file/d/FILE_ID/view
+  const fileMatch = url.match(/\/file\/d\/([^/]+)/);
+
+  if (fileMatch) {
+    return fileMatch[1];
+  }
+
+  // Format:
+  // https://drive.google.com/open?id=FILE_ID
+  // or
+  // https://drive.google.com/uc?id=FILE_ID
+  const idMatch = url.match(/[?&]id=([^&]+)/);
+
+  if (idMatch) {
+    return idMatch[1];
+  }
+
+  return null;
+};
+
+const getDriveDownloadUrl = (url) => {
+  const fileId = getDriveFileId(url);
+
+  if (!fileId) {
+    return url;
+  }
+
+  return `https://drive.google.com/uc?export=download&id=${fileId}`;
+};
+
+// ----------------------------------------
+// Navbar
+// ----------------------------------------
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+
+  const [resumeUrl, setResumeUrl] = useState("");
+
+  // ----------------------------------------
+  // Load Resume From Backend
+  // ----------------------------------------
+
+  useEffect(() => {
+    const loadResume = async () => {
+      try {
+        const data = await getResume();
+
+        if (data?.url) {
+          setResumeUrl(data.url);
+        }
+      } catch (error) {
+        console.error("Failed to load resume:", error);
+      }
+    };
+
+    loadResume();
+  }, []);
+
+  // ----------------------------------------
+  // Scroll Handling
+  // ----------------------------------------
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,12 +138,24 @@ export default function Navbar() {
 
     handleScroll();
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
+
+  // ----------------------------------------
+  // Mobile Menu
+  // ----------------------------------------
 
   const closeMobileMenu = () => {
     setMobileOpen(false);
   };
+
+  // ----------------------------------------
+  // Resume URL
+  // ----------------------------------------
+
+  const downloadResumeUrl = getDriveDownloadUrl(resumeUrl);
 
   return (
     <header
@@ -71,6 +166,7 @@ export default function Navbar() {
       }`}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
+
         {/* Logo */}
 
         <a
@@ -80,9 +176,12 @@ export default function Navbar() {
           Tanisha Ali<span className="text-gray-400">.</span>
         </a>
 
-        {/* Desktop */}
+        {/* Desktop Navigation */}
 
         <nav className="hidden items-center gap-8 lg:flex">
+
+          {/* Primary Links */}
+
           {primaryLinks.map((link) => {
             const isActive = activeSection === link.anchor;
 
@@ -100,9 +199,7 @@ export default function Navbar() {
 
                 <span
                   className={`absolute -bottom-2 left-0 h-[2px] bg-white transition-all duration-300 ${
-                    isActive
-                      ? "w-full"
-                      : "w-0"
+                    isActive ? "w-full" : "w-0"
                   }`}
                 />
               </Link>
@@ -111,65 +208,72 @@ export default function Navbar() {
 
           {/* More Dropdown */}
 
-  <div
-    className="relative"
-  >
-    <button className="flex items-center gap-1 text-sm font-medium text-gray-400 hover:text-white transition"
-    onClick={() => setMoreOpen(!moreOpen)}>
-      More
-      <ChevronDown
-        size={16}
-        className={`transition duration-300 ${
-          moreOpen ? "rotate-180" : ""
-        }`}
-      />
-    </button>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setMoreOpen((prev) => !prev)}
+              className="flex items-center gap-1 text-sm font-medium text-gray-400 transition hover:text-white"
+            >
+              More
 
-    {moreOpen && (
-      <div className="absolute right-0 mt-4 w-64 rounded-2xl border border-white/10 bg-black/95 backdrop-blur-xl shadow-2xl overflow-hidden">
+              <ChevronDown
+                size={16}
+                className={`transition duration-300 ${
+                  moreOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
 
-        {moreLinks.map((item) => (
-          <Link
-            key={item.name}
-            to={item.href}
-            className="block px-5 py-3 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition"
-          >
-            {item.name}
-          </Link>
-        ))}
+            {moreOpen && (
+              <div className="absolute right-0 mt-4 w-64 overflow-hidden rounded-2xl border border-white/10 bg-black/95 shadow-2xl backdrop-blur-xl">
 
-        <div className="mx-4 border-t border-white/10"></div>
+                {moreLinks.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setMoreOpen(false)}
+                    className="block px-5 py-3 text-sm text-gray-300 transition hover:bg-white/10 hover:text-white"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
 
-        <Link
-          to="/login"
-          className="block px-5 py-3 text-sm font-semibold text-white hover:bg-white hover:text-black transition"
-        >
-          Admin Login
-        </Link>
+                <div className="mx-4 border-t border-white/10" />
 
-      </div>
-    )}
-  </div>
+                <Link
+                  to="/login"
+                  onClick={() => setMoreOpen(false)}
+                  className="block px-5 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
+                >
+                  Admin Login
+                </Link>
+
+              </div>
+            )}
+          </div>
 
           {/* Resume */}
 
-          <a
-            href={resume}
-            download
-            className="flex items-center gap-2 rounded-xl border border-white bg-white px-5 py-2.5 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:bg-gray-200"
-          >
-            <Download size={18} />
-            Download CV
-          </a>
-
-          
+          {resumeUrl && (
+            <a
+              href={downloadResumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-xl border border-white bg-white px-5 py-2.5 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:bg-gray-200"
+            >
+              <Download size={18} />
+              Download CV
+            </a>
+          )}
         </nav>
 
-        {/* Mobile Button */}
+        {/* Mobile Menu Button */}
 
         <button
-          onClick={() => setMobileOpen(!mobileOpen)}
+          type="button"
+          onClick={() => setMobileOpen((prev) => !prev)}
           className="text-white lg:hidden"
+          aria-label="Toggle menu"
         >
           {mobileOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
@@ -183,51 +287,68 @@ export default function Navbar() {
         }`}
       >
         <div className="border-t border-white/10 bg-black/95 px-6 py-6 backdrop-blur-xl">
+
           <div className="flex flex-col gap-6">
+
+            {/* Primary Links */}
+
             {primaryLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.href}
                 onClick={closeMobileMenu}
-                className="text-gray-300 hover:text-white"
+                className="text-gray-300 transition hover:text-white"
               >
                 {link.name}
               </Link>
             ))}
 
+            {/* More */}
+
             <div className="border-t border-white/10 pt-4">
-    <p className="mb-4 text-xs uppercase tracking-widest text-gray-500">
-      More
-    </p>
 
-    {moreLinks.map((link) => (
-      <Link
-        key={link.name}
-        to={link.href}
-        onClick={closeMobileMenu}
-        className="block py-2 text-gray-300 hover:text-white"
-      >
-        {link.name}
-      </Link>
-    ))}
+              <p className="mb-4 text-xs uppercase tracking-widest text-gray-500">
+                More
+              </p>
 
-    <Link
-      to="/login"
-      onClick={closeMobileMenu}
-      className="mt-3 block rounded-xl border border-white/20 px-5 py-3 text-center font-semibold text-white transition hover:bg-white hover:text-black"
-    >
-      Admin Login
-    </Link>
-  </div>
+              {moreLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  onClick={closeMobileMenu}
+                  className="block py-2 text-gray-300 transition hover:text-white"
+                >
+                  {link.name}
+                </Link>
+              ))}
 
-  <a
-    href={resume}
-    download
-    className="flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-black hover:bg-gray-200"
-  >
-    <Download size={18} />
-    Download CV
-  </a>
+              {/* Admin Login */}
+
+              <Link
+                to="/login"
+                onClick={closeMobileMenu}
+                className="mt-3 block rounded-xl border border-white/20 px-5 py-3 text-center font-semibold text-white transition hover:bg-white hover:text-black"
+              >
+                Admin Login
+              </Link>
+
+            </div>
+
+            {/* Mobile Resume */}
+
+            {resumeUrl && (
+              <a
+                href={downloadResumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMobileMenu}
+                className="flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-black transition hover:bg-gray-200"
+              >
+                <Download size={18} />
+                Download CV
+              </a>
+            )}
+
           </div>
         </div>
       </div>
