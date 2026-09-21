@@ -34,8 +34,18 @@ const projectSchema = new mongoose.Schema(
     ],
 
     category: {
-      type: String,
-      default: "",
+      type: [String],
+      default: [],
+    },
+
+    startDate: {
+      type: Date,
+      required: true,
+    },
+
+    endDate: {
+      type: Date,
+      default: null,
     },
 
     featured: {
