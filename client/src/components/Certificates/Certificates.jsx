@@ -18,6 +18,7 @@ import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 
 export default function Certificates() {
+  const [allCertificates, setAllCertificates] = useState([]);
   const [certificates, setCertificates] = useState([]);
   const [years, setYears] = useState([]);
 
@@ -30,28 +31,37 @@ export default function Certificates() {
     "Donations",
     "Hackathons",
     "Internships",
+    "Volunteering",
   ];
+
+  // --------------------------------------------------
+  // LOAD ALL CERTIFICATES ONCE
+  // --------------------------------------------------
 
   useEffect(() => {
     loadCertificates();
   }, []);
 
-  useEffect(() => {
-    loadFilteredCertificates();
-  }, [selectedYear, selectedCategory]);
-
   const loadCertificates = async () => {
     try {
       const data = await getCertificates();
 
-      setCertificates(data);
+      // Sort newest → oldest
+      const sortedData = [...data].sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
 
-      // Extract unique years dynamically
+      setAllCertificates(sortedData);
+      setCertificates(sortedData);
+
+      // Extract unique years
       const uniqueYears = [
         ...new Set(
-          data.map((certificate) =>
-            new Date(certificate.date).getFullYear()
-          )
+          sortedData
+            .filter((certificate) => certificate.date)
+            .map((certificate) =>
+              new Date(certificate.date).getFullYear()
+            )
         ),
       ].sort((a, b) => b - a);
 
@@ -61,60 +71,85 @@ export default function Certificates() {
     }
   };
 
-  const loadFilteredCertificates = async () => {
-    try {
-      const filters = {};
+  // --------------------------------------------------
+  // FILTER CERTIFICATES
+  // --------------------------------------------------
 
-      if (selectedYear !== "All") {
-        filters.year = selectedYear;
-      }
+  useEffect(() => {
+    let filtered = [...allCertificates];
 
-      if (selectedCategory !== "All") {
-        filters.category = selectedCategory;
-      }
+    // Year filter
+    if (selectedYear !== "All") {
+      filtered = filtered.filter((certificate) => {
+        if (!certificate.date) return false;
 
-      const data = await getCertificates(filters);
+        const certificateYear = new Date(
+          certificate.date
+        ).getFullYear();
 
-      setCertificates(data);
-    } catch (error) {
-      console.error("Failed to filter certificates:", error);
+        return certificateYear === Number(selectedYear);
+      });
     }
-  };
 
-  // Extract Google Drive file ID
+    // Category filter
+    if (selectedCategory !== "All") {
+      filtered = filtered.filter(
+        (certificate) =>
+          certificate.category === selectedCategory
+      );
+    }
+
+    // Keep newest → oldest
+    filtered.sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+
+    setCertificates(filtered);
+  }, [selectedYear, selectedCategory, allCertificates]);
+
+  // --------------------------------------------------
+  // GOOGLE DRIVE HELPERS
+  // --------------------------------------------------
+
   const getDriveFileId = (url) => {
     if (!url) return null;
 
     // /file/d/FILE_ID/view
-    const fileMatch = url.match(/\/file\/d\/([^/]+)/);
+    const fileMatch = url.match(
+      /\/file\/d\/([^/]+)/
+    );
 
     if (fileMatch) {
       return fileMatch[1];
     }
 
     // ?id=FILE_ID
-    const idMatch = url.match(/[?&]id=([^&]+)/);
+    const idMatch = url.match(
+      /[?&]id=([^&]+)/
+    );
 
-      if (idMatch) {
-        return idMatch[1];
-      }
+    if (idMatch) {
+      return idMatch[1];
+    }
 
-      return null;
+    return null;
   };
 
-  // Google Drive thumbnail
   const getDriveThumbnail = (url) => {
     const fileId = getDriveFileId(url);
 
     if (!fileId) {
-      console.error("Invalid Google Drive URL:", url);
+      console.error(
+        "Invalid Google Drive URL:",
+        url
+      );
+
       return "";
     }
 
     return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
   };
 
-  // Google Drive preview
   const getDrivePreviewUrl = (url) => {
     const fileId = getDriveFileId(url);
 
@@ -123,7 +158,6 @@ export default function Certificates() {
     return `https://drive.google.com/file/d/${fileId}/view`;
   };
 
-  // Google Drive download
   const getDriveDownloadUrl = (url) => {
     const fileId = getDriveFileId(url);
 
@@ -131,6 +165,10 @@ export default function Certificates() {
 
     return `https://drive.google.com/uc?export=download&id=${fileId}`;
   };
+
+  // --------------------------------------------------
+  // FORMAT DATE
+  // --------------------------------------------------
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -165,8 +203,8 @@ export default function Certificates() {
           <div className="w-24 h-1 bg-white mx-auto" />
 
           <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
-            Professional certifications and credentials earned through
-            continuous learning and hands-on experience
+            Professional certifications and credentials earned
+            through continuous learning and hands-on experience
           </p>
         </motion.div>
 
@@ -187,10 +225,15 @@ export default function Certificates() {
           {/* Year Filter */}
           <select
             value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
+            onChange={(e) =>
+              setSelectedYear(e.target.value)
+            }
             className="w-full md:w-auto min-w-[180px] px-5 py-3 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 text-white outline-none cursor-pointer hover:border-white/30 transition-all"
           >
-            <option value="All" className="bg-gray-900">
+            <option
+              value="All"
+              className="bg-gray-900"
+            >
               All Years
             </option>
 
@@ -208,10 +251,15 @@ export default function Certificates() {
           {/* Category Filter */}
           <select
             value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+            onChange={(e) =>
+              setSelectedCategory(e.target.value)
+            }
             className="w-full md:w-auto min-w-[200px] px-5 py-3 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 text-white outline-none cursor-pointer hover:border-white/30 transition-all"
           >
-            <option value="All" className="bg-gray-900">
+            <option
+              value="All"
+              className="bg-gray-900"
+            >
               All Categories
             </option>
 
@@ -261,8 +309,9 @@ export default function Certificates() {
             }}
           >
             {certificates.map((cert, index) => (
-              <SwiperSlide key={cert._id || cert.title}>
-
+              <SwiperSlide
+                key={cert._id || cert.title}
+              >
                 <motion.div
                   initial={{
                     opacity: 0,
@@ -287,7 +336,9 @@ export default function Certificates() {
 
                     {/* Preview */}
                     <a
-                      href={getDrivePreviewUrl(cert.imageUrl)}
+                      href={getDrivePreviewUrl(
+                        cert.imageUrl
+                      )}
                       target="_blank"
                       rel="noopener noreferrer"
                       title="Preview Certificate"
@@ -298,7 +349,9 @@ export default function Certificates() {
 
                     {/* Download */}
                     <a
-                      href={getDriveDownloadUrl(cert.imageUrl)}
+                      href={getDriveDownloadUrl(
+                        cert.imageUrl
+                      )}
                       title="Download Certificate"
                       className="flex items-center justify-center w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-black hover:scale-105 transition-all duration-300"
                     >
@@ -317,7 +370,9 @@ export default function Certificates() {
                   {/* Certificate Image */}
                   <div className="mb-6 h-56 rounded-xl overflow-hidden border border-white/10 bg-white/10">
                     <img
-                      src={getDriveThumbnail(cert.imageUrl)}
+                      src={getDriveThumbnail(
+                        cert.imageUrl
+                      )}
                       alt={cert.title}
                       className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
                     />
@@ -349,7 +404,6 @@ export default function Certificates() {
                   </div>
 
                 </motion.div>
-
               </SwiperSlide>
             ))}
           </Swiper>
@@ -375,8 +429,8 @@ export default function Certificates() {
           className="mt-12 text-center"
         >
           <p className="text-gray-400">
-            Continuously learning and earning new certifications to stay
-            updated with the latest technologies
+            Continuously learning and earning new certifications
+            to stay updated with the latest technologies
           </p>
         </motion.div>
 

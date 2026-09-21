@@ -9,11 +9,12 @@ const primaryLinks = [
   { name: "Skills", href: "/skills", anchor: "skills" },
   { name: "Experience", href: "/experience", anchor: "experience" },
   { name: "Projects", href: "/projects", anchor: "projects" },
+  { name: "Achievements", href: "/achievements", anchor: "achievements" },
+  { name: "Certificates", href: "/certificates", anchor: "certificates" },
 ];
 
 const moreLinks = [
-  { name: "Achievements", href: "/achievements", anchor: "achievements" },
-  { name: "Certificates", href: "/certificates", anchor: "certificates" },
+  
   { name: "Coding Profiles", href: "/coding-profiles", anchor: "coding-profiles" },
   { name: "Content Creation", href: "/content-creation", anchor: "content-creation" },
   { name: "Contact", href: "/contact", anchor: "contact" },
