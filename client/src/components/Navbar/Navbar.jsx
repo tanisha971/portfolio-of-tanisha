@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Download, Menu, X, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getResume } from "../../services/assetService";
+import "../../styles/animations.css";
 
 // ----------------------------------------
 // Navigation Links
@@ -256,14 +257,26 @@ export default function Navbar() {
 
           {resumeUrl && (
             <a
-              href={downloadResumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-xl border border-white bg-white px-5 py-2.5 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:bg-gray-200"
-            >
-              <Download size={18} />
-              Download CV
-            </a>
+  href={downloadResumeUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="
+    cv-hover
+    flex
+    items-center
+    gap-2
+    rounded-xl
+    px-5
+    py-2.5
+    text-sm
+    font-semibold
+    transition-all
+    duration-300
+  "
+>
+  <Download size={18} />
+  Download CV
+</a>
           )}
         </nav>
 
@@ -342,7 +355,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={closeMobileMenu}
-                className="flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-black transition hover:bg-gray-200"
+                className="flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-black transition-all duration-500 bg-gradient-to-br to-white via-black from-red-500 bg-size-200 hover:bg-right-bottom"
               >
                 <Download size={18} />
                 Download CV

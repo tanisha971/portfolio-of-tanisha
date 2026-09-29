@@ -157,65 +157,59 @@ export default function Skills() {
           {skillCategories.map((category, categoryIndex) => (
 
             <motion.div
-              key={category.category}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+  key={category.category}
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{
+    duration: 0.5,
+    delay: categoryIndex * 0.1,
+  }}
+  className="skill-glow-card"
+>
+  <div className="skill-glow-card-inner">
+
+    <h3 className="text-xl font-bold text-white mb-6">
+      {category.category}
+    </h3>
+
+    <div className="space-y-6">
+      {category.skills.map((skill, skillIndex) => (
+        <div key={skill.name}>
+
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-gray-300 font-medium">
+              {skill.name}
+            </span>
+
+            <span className="text-gray-400 text-sm">
+              {skill.level}%
+            </span>
+          </div>
+
+          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{
+                width: `${skill.level}%`,
+              }}
               viewport={{ once: true }}
               transition={{
-                duration: 0.5,
-                delay: categoryIndex * 0.1,
+                duration: 1,
+                delay:
+                  categoryIndex * 0.1 +
+                  skillIndex * 0.1,
               }}
-              className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300"
-            >
+              className="h-full bg-gradient-to-r from-white to-gray-400 rounded-full"
+            />
+          </div>
 
-              <h3 className="text-xl font-bold text-white mb-6">
-                {category.category}
-              </h3>
+        </div>
+      ))}
+    </div>
 
-              <div className="space-y-6">
-
-                {category.skills.map((skill, skillIndex) => (
-
-                  <div key={skill.name}>
-
-                    <div className="flex justify-between items-center mb-2">
-
-                      <span className="text-gray-300 font-medium">
-                        {skill.name}
-                      </span>
-
-                      <span className="text-gray-400 text-sm">
-                        {skill.level}%
-                      </span>
-
-                    </div>
-
-                    <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{
-                          width: `${skill.level}%`,
-                        }}
-                        viewport={{ once: true }}
-                        transition={{
-                          duration: 1,
-                          delay:
-                            categoryIndex * 0.1 +
-                            skillIndex * 0.1,
-                        }}
-                        className="h-full bg-gradient-to-r from-white to-gray-400 rounded-full"
-                      />
-
-                    </div>
-
-                  </div>
-
-                ))}
-
-              </div>
-
-            </motion.div>
+  </div>
+</motion.div>
 
           ))}
 

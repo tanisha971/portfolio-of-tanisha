@@ -205,7 +205,7 @@ export default function Contact() {
 
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 font-medium text-black transition-all duration-300 hover:scale-[1.02] hover:bg-gray-200"
+                className="cv-hover flex w-full items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 font-medium text-black transition-all duration-300"
               >
 
                 <Send size={20} />

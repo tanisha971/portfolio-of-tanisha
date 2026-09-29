@@ -11,6 +11,7 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { Typewriter } from "react-simple-typewriter";
 
 import { getHero } from "../../services/assetService";
+import "../../styles/animations.css";
 
 const iconMap = {
   GitHub: GitHubIcon,
@@ -194,14 +195,14 @@ export default function Hero() {
 
               <a
                 href="#projects"
-                className="rounded-lg bg-white px-8 py-3 font-medium text-black transition-all duration-300 hover:scale-105 hover:bg-gray-200"
+                className="cv-hover rounded-lg bg-white px-8 py-3 font-medium text-black transition-all duration-300 "
               >
                 View Projects
               </a>
 
               <a
                 href="#contact"
-                className="rounded-lg border border-white/20 bg-white/10 px-8 py-3 font-medium text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20"
+                className="contact-hover rounded-lg border border-white/20 bg-white/10 px-8 py-3 font-medium text-white backdrop-blur-sm transition-all duration-300"
               >
                 Contact Me
               </a>
@@ -291,9 +292,9 @@ export default function Hero() {
                 <div className="relative h-96 w-96 overflow-hidden rounded-full border-4 border-white/10 bg-white/5 shadow-2xl backdrop-blur-xl">
 
                   <img
-                    src={data.profileImage}
+                    src="/assets/Tanisha_img1.png"
                     alt={data.name || "Profile"}
-                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-500"
                   />
 
                 </div>
