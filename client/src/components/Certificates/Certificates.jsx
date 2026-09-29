@@ -16,6 +16,7 @@ import {
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
+import "../../styles/animations.css";
 
 export default function Certificates() {
   const [allCertificates, setAllCertificates] = useState([]);
@@ -196,16 +197,14 @@ export default function Certificates() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-            Certifications
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4 heading-reflection">
+            CERTIFICATIONS
           </h2>
 
-          <div className="w-24 h-1 bg-white mx-auto" />
-
-          <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
+          {/* <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
             Professional certifications and credentials earned
             through continuous learning and hands-on experience
-          </p>
+          </p> */}
         </motion.div>
 
         {/* Filters */}

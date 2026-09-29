@@ -1,0 +1,17 @@
+/* =========================================
+   PORTFOLIO HEADING REFLECTION
+   ========================================= */
+
+.heading-reflection {
+  display: inline-block;
+  line-height: 1;
+
+  -webkit-box-reflect: below -10px
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.22) 30%,
+      rgba(255, 255, 255, 0.06) 65%,
+      transparent 90%
+    );
+}

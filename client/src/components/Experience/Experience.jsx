@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getExperiences } from "../../services/experienceService";
 import { motion } from 'motion/react';
 import { Briefcase, Calendar, Award } from 'lucide-react';
+import "../../styles/animations.css";
 
 export default function Experience() {
   const [experiences, setExperiences] = useState([]);
@@ -27,11 +28,9 @@ export default function Experience() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">Professional Experience</h2>
-          <div className="w-24 h-1 bg-white mx-auto"></div>
-          <p className="text-gray-400 mt-6">
-            My journey through various internships and professional roles
-          </p>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4 heading-reflection">EXPERIENCE</h2>
+          
+          
         </motion.div>
 
         <div className="relative">
@@ -94,6 +93,17 @@ export default function Experience() {
             ))}
           </div>
         </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-12 text-center"
+        >
+        <p className="text-gray-400 mt-6">
+            My journey through various internships and professional roles
+          </p>
+        </motion.div>
       </div>
     </section>
   );

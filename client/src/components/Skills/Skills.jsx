@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getSkills } from "../../services/skillService";
 import { motion } from "motion/react";
+import "../../styles/animations.css";
 
 export default function Skills() {
   const [skills, setSkills] = useState([]);
@@ -58,16 +59,10 @@ export default function Skills() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-            Skills & Technologies
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4 heading-reflection">
+            SKILLS
           </h2>
 
-          <div className="w-24 h-1 bg-white mx-auto"></div>
-
-          <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
-            A comprehensive toolkit of modern technologies and frameworks I
-            use to build amazing applications
-          </p>
         </motion.div>
 
 
@@ -83,9 +78,9 @@ export default function Skills() {
           className="mb-20"
         >
 
-          <h3 className="text-2xl font-bold text-white text-center mb-8">
+          {/* <h3 className="text-2xl font-bold text-white text-center mb-8">
             Tech Stack
-          </h3>
+          </h3> */}
 
           {/* Row 1 → Moves RIGHT */}
           <div className="relative overflow-hidden mb-5">
@@ -225,7 +220,18 @@ export default function Skills() {
           ))}
 
         </div>
-
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-12 text-center"
+        >
+          <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
+            A comprehensive toolkit of modern technologies and frameworks I
+            use to build amazing applications
+          </p>
+        </motion.div>
       </div>
     </section>
   );

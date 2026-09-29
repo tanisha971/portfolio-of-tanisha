@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import { getAbout } from "../../services/assetService";
+import "../../styles/animations.css";
 
 const iconMap = {
   Trophy,
@@ -60,13 +61,13 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          className="mb-16 text-center "
         >
-          <h2 className="mb-4 text-4xl font-bold text-white lg:text-5xl">
-            {about.data?.heading}
+          <h2 className=" text-4xl font-bold text-white lg:text-6xl mb-4 heading-reflection">
+            ABOUT ME
           </h2>
 
-          <div className="mx-auto h-1 w-24 bg-white" />
+          
         </motion.div>
 
         <div className="grid items-start gap-12 lg:grid-cols-2">

@@ -5,16 +5,13 @@ import { Filter } from "lucide-react";
 import ProjectCard from "./ProjectCard";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  EffectCoverflow,
-  Pagination,
-  Navigation,
-} from "swiper/modules";
+import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
+import "../../styles/animations.css";
 
 import { getProjects } from "../../services/projectService";
 
@@ -40,8 +37,6 @@ export default function Projects() {
   const loadProjects = async () => {
     try {
       const response = await getProjects();
-
-      console.log("Projects API:", response);
 
       const data = response.data || [];
 
@@ -242,22 +237,13 @@ export default function Projects() {
               text-4xl
               font-bold
               text-white
-              lg:text-5xl
+              lg:text-5xl heading-reflection
             "
           >
-            Featured Projects
+            PROJECTS
           </h2>
 
-          <div
-            className="
-              mx-auto
-              h-1
-              w-24
-              bg-white
-            "
-          />
-
-          <p
+          {/* <p
             className="
               mx-auto
               mt-6
@@ -268,7 +254,7 @@ export default function Projects() {
             A showcase of my best work, from
             award-winning hackathon projects to
             full-stack applications
-          </p>
+          </p> */}
         </motion.div>
 
         {/* --------------------------------------------------

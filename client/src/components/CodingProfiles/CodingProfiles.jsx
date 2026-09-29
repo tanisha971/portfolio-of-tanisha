@@ -8,6 +8,7 @@ import CodeIcon from "@mui/icons-material/Code";
 import { GitHubCalendar } from "react-github-calendar";
 
 import { getCodingProfiles } from "../../services/assetService";
+import "../../styles/animations.css";
 
 const iconMap = {
   GitHub: GitHubIcon,
@@ -73,15 +74,9 @@ export default function CodingProfiles() {
           className="mb-16 text-center"
         >
 
-          <h2 className="mb-4 text-4xl font-bold text-white lg:text-5xl">
+          <h2 className="mb-4 text-4xl uppercase font-bold text-white lg:text-5xl heading-reflection">
             {content.data?.heading}
           </h2>
-
-          <div className="mx-auto h-1 w-24 bg-white" />
-
-          <p className="mx-auto mt-6 max-w-2xl text-gray-400">
-            {content.data?.description}
-          </p>
 
         </motion.div>
 
@@ -175,9 +170,18 @@ export default function CodingProfiles() {
               </motion.div>
             );
           })}
-
         </div>
-
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-12 text-center"
+        >
+          <p className="mx-auto mt-6 max-w-2xl text-gray-400">
+            {content.data?.description}
+          </p>
+        </motion.div>
         {/* GitHub Contribution Graph */}
 
         <motion.div

@@ -12,6 +12,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import "../../styles/animations.css";
 
 import { getContact } from "../../services/assetService";
 
@@ -103,15 +104,9 @@ export default function Contact() {
           className="mb-16 text-center"
         >
 
-          <h2 className="mb-4 text-4xl font-bold text-white lg:text-5xl">
+          <h2 className="mb-4 text-4xl uppercase font-bold text-white lg:text-5xl heading-reflection">
             {data.heading}
           </h2>
-
-          <div className="mx-auto h-1 w-24 bg-white" />
-
-          <p className="mx-auto mt-6 max-w-2xl text-gray-400">
-            {data.description}
-          </p>
 
         </motion.div>
 
@@ -353,6 +348,17 @@ export default function Contact() {
           </motion.div>
 
         </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-12 text-center"
+        >
+        <p className="mx-auto mt-6 max-w-2xl text-gray-400">
+            {data.description}
+          </p>
+        </motion.div>
       </div>
     </section>
   );

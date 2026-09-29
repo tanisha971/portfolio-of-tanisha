@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getAchievements } from "../../services/achievementService";
 import { motion } from 'motion/react';
 import { Trophy, Star, Award, Target } from 'lucide-react';
+import "../../styles/animations.css";
 
 export default function Achievements() {
   const [achievements, setAchievements] = useState([]);
@@ -36,11 +37,9 @@ export default function Achievements() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">Achievements & Recognition</h2>
-          <div className="w-24 h-1 bg-white mx-auto"></div>
-          <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
-            Milestones and accomplishments that mark my journey in technology and innovation
-          </p>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4 heading-reflection">ACHIEVEMENTS</h2>
+          
+          
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -108,6 +107,17 @@ export default function Achievements() {
               </motion.div>
             ))}
           </div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-12 text-center"
+        >
+        <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
+            Milestones and accomplishments that mark my journey in technology and innovation
+          </p>
         </motion.div>
       </div>
     </section>
