@@ -26,8 +26,8 @@ const moreLinks = [
   },
   {
     name: "Content Creation",
-    href: "/content-creation",
-    anchor: "content-creation",
+    href: "/content",
+    anchor: "content",
   },
   {
     name: "Contact",

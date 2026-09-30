@@ -18,6 +18,7 @@ function App() {
           <Route path="/achievements" element={<SectionPage sectionId="achievements" />} />
           <Route path="/certificates" element={<SectionPage sectionId="certificates" />} />
           <Route path="/coding-profiles" element={<SectionPage sectionId="coding-profiles" />} />
+          <Route path="/content" element={<SectionPage sectionId="content" />} />
           <Route path="/contact" element={<SectionPage sectionId="contact" />} />
           <Route path="/login" element={<Login />} />
         </Routes>

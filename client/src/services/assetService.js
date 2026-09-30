@@ -40,6 +40,10 @@ export const getCodingProfiles = async () => {
   return getAsset("coding-profiles");
 };
 
+export const getContent = async () => {
+  return getAsset("content-creation");
+};
+
 export const getContact = async () => {
   return getAsset("contact");
 };
