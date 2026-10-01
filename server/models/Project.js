@@ -10,6 +10,12 @@ const projectSchema = new mongoose.Schema(
     description: {
       type: String,
       required: true,
+      trim: true,
+    },
+
+    details: {
+      type: [String],
+      default: [],
     },
 
     image: {
@@ -52,11 +58,7 @@ const projectSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
-    order: {
-      type: Number,
-      default: 0,
-    },
+    
   },
   {
     timestamps: true,

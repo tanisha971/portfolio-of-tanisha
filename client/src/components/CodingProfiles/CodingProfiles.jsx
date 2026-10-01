@@ -17,7 +17,8 @@ const iconMap = {
 
 export default function CodingProfiles() {
   const [content, setContent] = useState(null);
-  const [selectedPlatform, setSelectedPlatform] = useState("GitHub");
+  const [selectedPlatform, setSelectedPlatform] =
+    useState("GitHub");
 
   useEffect(() => {
     const loadProfiles = async () => {
@@ -48,17 +49,71 @@ export default function CodingProfiles() {
     content.data?.githubUrl ||
     `https://github.com/${githubUsername}`;
 
+  /* =========================================================
+     DIRECTIONAL 3D CARD EFFECT
+  ========================================================= */
+
+  const handleMouseMove = (event) => {
+    const card = event.currentTarget;
+
+    const rect = card.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const xPercent = x / rect.width;
+    const yPercent = y / rect.height;
+
+    const rotateY = (xPercent - 0.5) * 8;
+    const rotateX = (0.5 - yPercent) * 8;
+
+    card.style.setProperty(
+      "--rotate-x",
+      `${rotateX}deg`
+    );
+
+    card.style.setProperty(
+      "--rotate-y",
+      `${rotateY}deg`
+    );
+
+    card.style.setProperty(
+      "--glow-x",
+      `${xPercent * 100}%`
+    );
+
+    card.style.setProperty(
+      "--glow-y",
+      `${yPercent * 100}%`
+    );
+  };
+
+  const handleMouseLeave = (event) => {
+    const card = event.currentTarget;
+
+    card.style.setProperty("--rotate-x", "0deg");
+    card.style.setProperty("--rotate-y", "0deg");
+
+    card.style.setProperty("--glow-x", "50%");
+    card.style.setProperty("--glow-y", "50%");
+  };
+
   return (
     <section
       id="coding-profiles"
       className="relative overflow-hidden px-6 py-24 lg:px-8"
     >
+      {/* =====================================================
+          BACKGROUND
+      ====================================================== */}
 
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
 
-        {/* Heading */}
+        {/* ===================================================
+            HEADING
+        ==================================================== */}
 
         <motion.div
           initial={{
@@ -69,24 +124,30 @@ export default function CodingProfiles() {
             opacity: 1,
             y: 0,
           }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.6,
+          }}
           className="mb-16 text-center"
         >
-
-          <h2 className="mb-4 text-4xl uppercase font-bold text-white lg:text-5xl heading-reflection">
+          <h2 className="mb-4 text-4xl font-bold uppercase text-white heading-reflection lg:text-5xl">
             {content.data?.heading}
           </h2>
-
         </motion.div>
 
-        {/* Profiles */}
 
-        <div className="grid gap-8 md:grid-cols-3">
+        {/* ===================================================
+            PROFILE CARDS
+        ==================================================== */}
+
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 
           {profiles.map((profile, index) => {
 
-            const Icon = iconMap[profile.icon] || CodeIcon;
+            const Icon =
+              iconMap[profile.icon] || CodeIcon;
 
             return (
               <motion.div
@@ -99,90 +160,93 @@ export default function CodingProfiles() {
                   opacity: 1,
                   y: 0,
                 }}
-                viewport={{ once: true }}
+                viewport={{
+                  once: true,
+                }}
                 transition={{
                   duration: 0.5,
                   delay: index * 0.1,
                 }}
-                whileHover={{
-                  scale: 1.05,
-                }}
-                className="group relative rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl transition-all duration-300 hover:border-white/30"
+                className="coding-card-wrapper"
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
               >
 
-                <div
-                  className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${profile.color} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
-                />
+                <div className="coding-card">
 
-                <div className="relative z-10 space-y-6">
+                  {/* =========================================
+                      TOP ROW
+                  ========================================== */}
 
-                  {/* Icon */}
+                  <div className="coding-card-top">
 
-                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-white/10 transition-all group-hover:bg-white/20">
+                    {/* Icon + Platform Name */}
 
-                    <Icon
-                      fontSize="large"
-                      className="text-white"
-                    />
+                    <div className="coding-platform">
 
-                  </div>
+                      <Icon
+                        sx={{
+                          fontSize: 28,
+                        }}
+                        className="text-white"
+                      />
 
-                  {/* Content */}
-
-                  <div className="space-y-3">
-
-                    <h3 className="text-2xl font-bold text-white">
-                      {profile.platform}
-                    </h3>
-
-                    <p className="text-sm text-gray-400">
-                      {profile.username}
-                    </p>
-
-                    <div className="pb-2 pt-2">
-
-                      <div className="mb-1 text-xl font-bold text-white">
-                        {profile.stats}
-                      </div>
-
-                      <p className="text-sm text-gray-300">
-                        {profile.description}
-                      </p>
+                      <h3 className="text-xl font-bold text-white">
+                        {profile.platform}
+                      </h3>
 
                     </div>
 
+
+                    {/* Visit Profile - ICON ONLY */}
+
+                    <a
+                      href={profile.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Visit ${profile.platform} profile`}
+                      className="coding-visit-button"
+                    >
+                      <ExternalLink size={18} />
+                    </a>
+
                   </div>
+                  {/* =========================================
+                      USERNAME
+                  ========================================== */}
 
-                  {/* Visit */}
+                  <p className="mt-5 text-sm font-medium text-gray-400">
+                    {profile.username}
+                  </p>
 
-                  <a
-                    href={profile.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/10 px-4 py-3 font-medium text-white transition-all duration-300 hover:bg-white/20"
-                  >
-                    <span>Visit Profile</span>
-                    <ExternalLink size={16} />
-                  </a>
+                  {/* =========================================
+                      STAT
+                  ========================================== */}
+
+                  <div className="mt-10">
+
+                    <div className="text-2xl font-bold text-white">
+                      {profile.stats}
+                    </div>
+
+                    <p className="mt-3 text-sm leading-6 text-gray-300">
+                      {profile.description}
+                    </p>
+
+                  </div>
 
                 </div>
 
               </motion.div>
             );
           })}
+
         </div>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-12 text-center"
-        >
-          <p className="mx-auto mt-6 max-w-2xl text-gray-400">
-            {content.data?.description}
-          </p>
-        </motion.div>
-        {/* GitHub Contribution Graph */}
+
+
+        {/* ===================================================
+            DESCRIPTION
+        ==================================================== */}
 
         <motion.div
           initial={{
@@ -193,8 +257,39 @@ export default function CodingProfiles() {
             opacity: 1,
             y: 0,
           }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.6,
+          }}
+          className="mt-12 text-center"
+        >
+          <p className="mx-auto mt-6 max-w-2xl text-gray-400">
+            {content.data?.description}
+          </p>
+        </motion.div>
+
+
+        {/* ===================================================
+            GITHUB CONTRIBUTION GRAPH
+        ==================================================== */}
+
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.6,
+          }}
           className="mt-16 rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-10 backdrop-blur-xl"
         >
 
@@ -213,6 +308,9 @@ export default function CodingProfiles() {
             </div>
 
           </div>
+
+
+          {/* GitHub Calendar */}
 
           <div className="overflow-x-auto rounded-2xl border border-white/10 bg-black/30 p-6">
 
@@ -238,6 +336,9 @@ export default function CodingProfiles() {
             </div>
 
           </div>
+
+
+          {/* GitHub Profile Link */}
 
           <div className="mt-6 flex flex-col items-center gap-3 text-center">
 

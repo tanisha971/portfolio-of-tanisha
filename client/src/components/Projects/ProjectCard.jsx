@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { ExternalLink } from "lucide-react";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import { Link } from "react-router-dom";
 
 export default function ProjectCard({ project, index }) {
   // --------------------------------------------------
@@ -10,17 +11,13 @@ export default function ProjectCard({ project, index }) {
   const formatDateRange = () => {
     if (!project.startDate) return "";
 
-    const startYear = new Date(
-      project.startDate
-    ).getFullYear();
+    const startYear = new Date(project.startDate).getFullYear();
 
     if (!project.endDate) {
       return `${startYear}`;
     }
 
-    const endYear = new Date(
-      project.endDate
-    ).getFullYear();
+    const endYear = new Date(project.endDate).getFullYear();
 
     if (startYear === endYear) {
       return `${startYear}`;
@@ -36,8 +33,8 @@ export default function ProjectCard({ project, index }) {
   const categories = Array.isArray(project.category)
     ? project.category
     : project.category
-      ? [project.category]
-      : [];
+    ? [project.category]
+    : [];
 
   return (
     <motion.div
@@ -77,12 +74,11 @@ export default function ProjectCard({ project, index }) {
         hover:border-white/30
       "
     >
-      {/* --------------------------------------------------
-          HOVER GLOW
-      -------------------------------------------------- */}
+      {/* HOVER GLOW */}
 
       <div
         className="
+          pointer-events-none
           absolute
           inset-0
           rounded-2xl
@@ -97,9 +93,7 @@ export default function ProjectCard({ project, index }) {
         "
       />
 
-      {/* --------------------------------------------------
-          TOP RIGHT ACTIONS
-      -------------------------------------------------- */}
+      {/* TOP RIGHT ACTIONS */}
 
       <div
         className="
@@ -111,7 +105,6 @@ export default function ProjectCard({ project, index }) {
           gap-2
         "
       >
-        {/* GitHub */}
         {project.github && (
           <a
             href={project.github}
@@ -132,16 +125,15 @@ export default function ProjectCard({ project, index }) {
               backdrop-blur-md
               transition-all
               duration-300
+              hover:scale-105
               hover:bg-white
               hover:text-black
-              hover:scale-105
             "
           >
             <GitHubIcon fontSize="small" />
           </a>
         )}
 
-        {/* Live Project */}
         {project.live && (
           <a
             href={project.live}
@@ -162,9 +154,9 @@ export default function ProjectCard({ project, index }) {
               backdrop-blur-md
               transition-all
               duration-300
+              hover:scale-105
               hover:bg-white
               hover:text-black
-              hover:scale-105
             "
           >
             <ExternalLink size={18} />
@@ -172,9 +164,7 @@ export default function ProjectCard({ project, index }) {
         )}
       </div>
 
-      {/* --------------------------------------------------
-          CATEGORY BADGES
-      -------------------------------------------------- */}
+      {/* CATEGORY */}
 
       <div
         className="
@@ -208,10 +198,7 @@ export default function ProjectCard({ project, index }) {
         ))}
       </div>
 
-      {/* --------------------------------------------------
-          PROJECT IMAGE
-          SAME SIZE AS CERTIFICATE
-      -------------------------------------------------- */}
+      {/* PROJECT IMAGE */}
 
       <div
         className="
@@ -238,12 +225,9 @@ export default function ProjectCard({ project, index }) {
         />
       </div>
 
-      {/* --------------------------------------------------
-          PROJECT DETAILS
-      -------------------------------------------------- */}
+      {/* PROJECT DETAILS */}
 
       <div className="space-y-3">
-        {/* Title + Date */}
         <div
           className="
             flex
@@ -252,13 +236,7 @@ export default function ProjectCard({ project, index }) {
             gap-4
           "
         >
-          <h3
-            className="
-              text-xl
-              font-bold
-              text-white
-            "
-          >
+          <h3 className="text-xl font-bold text-white">
             {project.title}
           </h3>
 
@@ -275,21 +253,46 @@ export default function ProjectCard({ project, index }) {
           )}
         </div>
 
-        {/* Description */}
+        {/* DESCRIPTION - ONLY 2 LINES */}
+
         <p
           className="
             text-sm
             leading-7
             text-gray-300
           "
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
         >
           {project.description}
         </p>
+
+        {/* SEE MORE */}
+
+        <Link
+          to={`/projects/${project._id}`}
+          className="
+            relative
+            z-20
+            inline-block
+            text-sm
+            font-bold
+            text-white
+            transition-all
+            duration-300
+            hover:underline
+            hover:underline-offset-4
+          "
+        >
+          See more
+        </Link>
       </div>
 
-      {/* --------------------------------------------------
-          TECH STACK
-      -------------------------------------------------- */}
+      {/* TECH STACK */}
 
       {project.tech?.length > 0 && (
         <div className="mt-6 flex flex-wrap gap-2">

@@ -241,3 +241,474 @@
 .contact-hover:hover {
   border-color: rgba(255, 255, 255, 0.4);
 }
+
+/* =========================================================
+   CONTENT CARD
+   ========================================================= */
+
+.content-card-wrapper {
+  height: 100%;
+  perspective: 900px;
+}
+
+
+.content-card {
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --glow-x: 50%;
+  --glow-y: 50%;
+
+  position: relative;
+
+  height: 100%;
+  min-height: 360px;
+
+  padding: 1.75rem;
+
+  border-radius: 1.25rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  background: rgba(255, 255, 255, 0.045);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  transform-style: preserve-3d;
+
+  transform:
+    perspective(900px)
+    rotateX(var(--rotate-x))
+    rotateY(var(--rotate-y))
+    translateZ(0);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  transition:
+    transform 0.08s linear,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   DIRECTIONAL HOVER GLOW
+   ========================================================= */
+
+.content-card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at var(--glow-x) var(--glow-y),
+      rgba(255, 255, 255, 0.10),
+      transparent 38%
+    );
+
+  opacity: 0;
+
+  transition: opacity 0.25s ease;
+}
+
+
+.content-card-wrapper:hover .content-card::before {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   TOP ROW
+   ========================================================= */
+
+.content-card-top {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  gap: 1rem;
+}
+
+
+/* =========================================================
+   SOCIAL ICON + NAME
+   ========================================================= */
+
+.content-platform {
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  flex: 1;
+  min-width: 0;
+}
+
+
+/* NO BOX AROUND SOCIAL ICON */
+.content-platform > svg {
+  flex-shrink: 0;
+
+  transform: translateZ(15px);
+
+  transition: transform 0.25s ease;
+}
+
+
+.content-card-wrapper:hover .content-platform > svg {
+  transform: translateZ(28px);
+}
+
+
+/* =========================================================
+   FOLLOWERS
+   ========================================================= */
+
+.content-followers {
+  display: flex;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  flex-shrink: 0;
+
+  transform: translateZ(12px);
+}
+
+
+/* =========================================================
+   VISIT ICON BUTTON
+   ========================================================= */
+
+.content-visit-button {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  border-radius: 0.7rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  background: rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  overflow: hidden;
+
+  transform: translateZ(15px);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+.content-card-wrapper:hover .content-visit-button {
+  transform: translateZ(28px);
+}
+
+
+.content-visit-button::before {
+  content: "";
+
+  position: absolute;
+
+  width: 75%;
+  height: 220%;
+
+  top: -60%;
+  left: -120%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.9),
+    transparent
+  );
+
+  transform: rotate(45deg);
+
+  transition:
+    left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.content-visit-button:hover::before {
+  left: 120%;
+}
+
+
+.content-visit-button:hover {
+  background: white;
+
+  color: black;
+
+  border-color: white;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+  .content-card {
+    min-height: 0;
+    padding: 1.5rem;
+  }
+
+  .content-card-top {
+    gap: 0.7rem;
+  }
+
+  .content-platform {
+    gap: 0.5rem;
+  }
+
+}
+
+/* =========================================================
+   CODING PROFILE 3D CARDS
+   ========================================================= */
+
+.coding-card-wrapper {
+  height: 100%;
+  perspective: 900px;
+}
+
+
+.coding-card {
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --glow-x: 50%;
+  --glow-y: 50%;
+
+  position: relative;
+
+  height: 100%;
+  min-height: 270px;
+
+  padding: 1.75rem;
+
+  border-radius: 1.25rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  background: rgba(255, 255, 255, 0.045);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  transform-style: preserve-3d;
+
+  transform:
+    perspective(900px)
+    rotateX(var(--rotate-x))
+    rotateY(var(--rotate-y))
+    translateZ(0);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  transition:
+    transform 0.08s linear,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   CURSOR FOLLOWING GLOW
+   ========================================================= */
+
+.coding-card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at var(--glow-x) var(--glow-y),
+      rgba(255, 255, 255, 0.10),
+      transparent 38%
+    );
+
+  opacity: 0;
+
+  transition: opacity 0.25s ease;
+}
+
+
+.coding-card-wrapper:hover .coding-card::before {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   TOP ROW
+   ========================================================= */
+
+.coding-card-top {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   ICON + PLATFORM NAME
+   ========================================================= */
+
+.coding-platform {
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  min-width: 0;
+
+  transform: translateZ(15px);
+
+  transition: transform 0.25s ease;
+}
+
+
+.coding-card-wrapper:hover .coding-platform {
+  transform: translateZ(28px);
+}
+
+
+.coding-platform > svg {
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   VISIT PROFILE ICON
+   ========================================================= */
+
+.coding-visit-button {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  border-radius: 0.7rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  background: rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  overflow: hidden;
+
+  transform: translateZ(15px);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+.coding-card-wrapper:hover .coding-visit-button {
+  transform: translateZ(28px);
+}
+
+
+/* =========================================================
+   VISIT BUTTON LIGHT SWEEP
+   ========================================================= */
+
+.coding-visit-button::before {
+  content: "";
+
+  position: absolute;
+
+  width: 75%;
+  height: 220%;
+
+  top: -60%;
+  left: -120%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.9),
+    transparent
+  );
+
+  transform: rotate(45deg);
+
+  transition:
+    left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.coding-visit-button:hover::before {
+  left: 120%;
+}
+
+
+.coding-visit-button:hover {
+  background: white;
+
+  color: black;
+
+  border-color: white;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+  .coding-card {
+    min-height: 0;
+    padding: 1.5rem;
+  }
+
+}

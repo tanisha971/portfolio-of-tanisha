@@ -5,6 +5,7 @@ import {
   createProject,
   updateProject,
   deleteProject,
+  getProjectById
 } from "../controllers/projectController.js";
 
 import { protect } from "../middleware/authMiddleware.js";
@@ -15,5 +16,5 @@ router.get("/", getProjects);
 router.post("/", protect, createProject);
 router.put("/:id", protect, updateProject);
 router.delete("/:id", protect, deleteProject);
-
+router.get("/:id", getProjectById);
 export default router;
