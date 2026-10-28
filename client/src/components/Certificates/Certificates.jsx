@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { getCertificates } from "../../services/certificateService";
 
 import { motion } from "motion/react";
 
-import { Download, Eye, Filter } from "lucide-react";
+import { Download, Eye, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -22,9 +22,10 @@ export default function Certificates() {
   const [allCertificates, setAllCertificates] = useState([]);
   const [certificates, setCertificates] = useState([]);
   const [years, setYears] = useState([]);
-
+  
   const [selectedYear, setSelectedYear] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const swiperRef = useRef(null);
 
   const categories = [
     "Skills",
@@ -276,37 +277,51 @@ export default function Certificates() {
         </motion.div>
 
         {/* Certificate Slider */}
-        {certificates.length > 0 ? (
-          <Swiper
-            key={`${selectedYear}-${selectedCategory}`}
-            modules={[EffectCoverflow, Pagination]}
-            effect="coverflow"
-            centeredSlides={true}
-            grabCursor={true}
-            loop={certificates.length > 2}
-            pagination={{
-              clickable: true,
-            }}
-            coverflowEffect={{
-              rotate: 0,
-              stretch: 0,
-              depth: 180,
-              modifier: 1.5,
-              scale: 0.9,
-              slideShadows: false,
-            }}
-            breakpoints={{
-              0: {
-                slidesPerView: 1.1,
-              },
-              768: {
-                slidesPerView: 1.8,
-              },
-              1200: {
-                slidesPerView: 2.3,
-              },
-            }}
-          >
+{certificates.length > 0 ? (
+  <div className="relative">
+    {/* LEFT ARROW */}
+    <button
+      type="button"
+      onClick={() => swiperRef.current?.slidePrev()}
+      aria-label="Previous certificate"
+      className="absolute left-0 top-1/2 z-30 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all duration-300 hover:bg-white hover:text-black md:-left-5 lg:-left-8"
+    >
+      <ChevronLeft size={32} strokeWidth={2} />
+    </button>
+
+    <Swiper
+      key={`${selectedYear}-${selectedCategory}`}
+      onSwiper={(swiper) => {
+        swiperRef.current = swiper;
+      }}
+      modules={[EffectCoverflow, Pagination]}
+      effect="coverflow"
+      centeredSlides={true}
+      grabCursor={true}
+      loop={certificates.length > 2}
+      pagination={{
+        clickable: true,
+      }}
+      coverflowEffect={{
+        rotate: 0,
+        stretch: 0,
+        depth: 180,
+        modifier: 1.5,
+        scale: 0.9,
+        slideShadows: false,
+      }}
+      breakpoints={{
+        0: {
+          slidesPerView: 1.1,
+        },
+        768: {
+          slidesPerView: 1.8,
+        },
+        1200: {
+          slidesPerView: 2.3,
+        },
+      }}
+    >
             {certificates.map((cert, index) => (
               <SwiperSlide
                 key={cert._id || cert.title}
@@ -327,9 +342,24 @@ export default function Certificates() {
                     duration: 0.5,
                     delay: index * 0.1,
                   }}
-                  className="group relative mx-auto w-full max-w-[420px] bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300"
+                  className="
+                    group relative mx-auto w-full max-w-[420px]
+                    overflow-hidden rounded-2xl
+                    bg-white/5 backdrop-blur-xl p-8
+                    border border-white/10
+                    hover:border-white/30
+                    transition-all duration-300
+                  "     
                 >
-
+                  {/* PROJECT-STYLE HOVER GLOW */}
+                  <div
+                    className="
+                      pointer-events-none absolute inset-0 rounded-2xl
+                      bg-gradient-to-br from-transparent via-transparent
+                      to-white/5 opacity-0 transition duration-500
+                      group-hover:opacity-100
+                    "
+                  />
                   {/* Top Right Actions */}
                   <div className="absolute top-5 right-5 z-20 flex gap-2">
 
@@ -373,7 +403,7 @@ export default function Certificates() {
                         cert.imageUrl
                       )}
                       alt={cert.title}
-                      className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover"
                     />
                   </div>
 
@@ -406,6 +436,16 @@ export default function Certificates() {
               </SwiperSlide>
             ))}
           </Swiper>
+          {/* RIGHT ARROW */}
+    <button
+      type="button"
+      onClick={() => swiperRef.current?.slideNext()}
+      aria-label="Next certificate"
+      className="absolute right-0 top-1/2 z-30 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all duration-300 hover:bg-white hover:text-black md:-right-5 lg:-right-8"
+    >
+      <ChevronRight size={32} strokeWidth={2} />
+    </button>
+  </div>
         ) : (
           /* No Results */
           <motion.div

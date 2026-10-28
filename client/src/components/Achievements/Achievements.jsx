@@ -50,13 +50,23 @@ export default function Achievements() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              className="group relative bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300"
+              className="
+                group relative overflow-hidden
+                bg-white/5 backdrop-blur-xl rounded-2xl p-8
+                border border-white/10
+                hover:border-white/30
+                transition-all duration-300
+              "
             >
-              {/* Gradient Background */}
+              {/* PROJECT-STYLE HOVER GLOW */}
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${achievement.color} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-              ></div>
+                className="
+                  pointer-events-none absolute inset-0 rounded-2xl
+                  bg-gradient-to-br from-transparent via-transparent
+                  to-white/5 opacity-0 transition duration-500
+                  group-hover:opacity-100
+                "
+              />
 
               <div className="relative z-10 space-y-4">
                 {/* Icon */}

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -7,7 +8,6 @@ import PeopleIcon from "@mui/icons-material/People";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import { getContent } from "../../services/assetService";
-import "../../styles/animations.css";
 
 const platformIcons = {
   Instagram: InstagramIcon,
@@ -44,108 +44,26 @@ export default function Content() {
   const data = content.data || {};
   const platforms = data.platforms || [];
 
-  /* =========================================================
-     3D CARD MOUSE EFFECT
-     ========================================================= */
-
-  const handleMouseMove = (event) => {
-    const card = event.currentTarget;
-
-    const rect = card.getBoundingClientRect();
-
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    const xPercent = x / rect.width;
-    const yPercent = y / rect.height;
-
-    /*
-      Cursor position controls the direction of the tilt.
-
-      Left side  → card tilts toward left
-      Right side → card tilts toward right
-      Top        → card tilts toward top
-      Bottom     → card tilts toward bottom
-    */
-
-    const rotateY = (xPercent - 0.5) * 8;
-    const rotateX = (0.5 - yPercent) * 8;
-
-    card.style.setProperty(
-      "--rotate-x",
-      `${rotateX}deg`
-    );
-
-    card.style.setProperty(
-      "--rotate-y",
-      `${rotateY}deg`
-    );
-
-    /*
-      Soft light follows the cursor.
-    */
-
-    card.style.setProperty(
-      "--glow-x",
-      `${xPercent * 100}%`
-    );
-
-    card.style.setProperty(
-      "--glow-y",
-      `${yPercent * 100}%`
-    );
-  };
-
-  const handleMouseLeave = (event) => {
-    const card = event.currentTarget;
-
-    card.style.setProperty("--rotate-x", "0deg");
-    card.style.setProperty("--rotate-y", "0deg");
-
-    card.style.setProperty("--glow-x", "50%");
-    card.style.setProperty("--glow-y", "50%");
-  };
-
   return (
     <section
       id="content"
       className="relative overflow-hidden px-6 py-24 lg:px-8"
     >
-      {/* =====================================================
-          BACKGROUND
-      ====================================================== */}
-
-      <div className="absolute inset-0 pointer-events-none">
+      {/* BACKGROUND */}
+      <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-10 top-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
 
         <div className="absolute bottom-1/4 right-10 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
       </div>
 
-      {/* =====================================================
-          MAIN CONTENT
-      ====================================================== */}
-
+      {/* MAIN CONTENT */}
       <div className="relative z-10 mx-auto max-w-7xl">
-
-        {/* ===================================================
-            HEADING
-        ==================================================== */}
-
+        {/* HEADING */}
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
           <h2 className="heading-reflection mb-4 text-4xl font-bold uppercase text-white lg:text-5xl">
@@ -157,86 +75,96 @@ export default function Content() {
           </p>
         </motion.div>
 
-        {/* ===================================================
-            PLATFORM CARDS
-        ==================================================== */}
-
+        {/* PLATFORM CARDS */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-
           {platforms.map((platform, index) => {
             const Icon = platformIcons[platform.name];
 
             return (
               <motion.div
                 key={platform.name}
-                initial={{
-                  opacity: 0,
-                  y: 40,
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                viewport={{
-                  once: true,
-                }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{
                   duration: 0.6,
                   delay: index * 0.1,
                 }}
-                className="content-card-wrapper"
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
+                whileHover="hover"
+                style={{
+                  position: "relative",
+                  height: "100%",
+                  minHeight: "360px",
+                  padding: "1.75rem",
+                  borderRadius: "1.25rem",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(255,255,255,0.045)",
+                  backdropFilter: "blur(18px)",
+                  WebkitBackdropFilter: "blur(18px)",
+                  overflow: "hidden",
+                  transition: "border-color 0.3s ease",
+                }}
               >
-                <div className="content-card">
+                {/* INLINE HOVER GLOW */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  variants={{
+                    hover: { opacity: 1 },
+                  }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: "inherit",
+                    background:
+                      "linear-gradient(to bottom right, transparent 0%, transparent 55%, rgba(255,255,255,0.05) 100%)",
+                    pointerEvents: "none",
+                    zIndex: 0,
+                  }}
+                />
 
-                  {/* =========================================
-                      TOP ROW
-
-                      [ Social Icon + Name ]
-                      [ Followers ]
-                      [ Visit Icon ]
-                  ========================================== */}
-
-                  <div className="content-card-top">
-
-                    {/* ---------------------------------------
-                        SOCIAL ICON + PLATFORM NAME
-                    ---------------------------------------- */}
-
-                    <div className="content-platform">
-
+                {/* CARD CONTENT */}
+                <div
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
+                  {/* TOP ROW */}
+                  <div className="flex w-full items-center justify-between gap-4">
+                    {/* CLICKABLE PLATFORM ICON + NAME */}
+                    <a
+                      href={platform.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Visit ${platform.name}`}
+                      className="flex min-w-0 flex-1 items-center gap-2.5 text-white transition-colors duration-300 hover:text-gray-300"
+                    >
                       {Icon && (
                         <Icon
-                          sx={{
-                            fontSize: 28,
-                          }}
-                          className="text-white"
+                          sx={{ fontSize: 28 }}
+                          className="shrink-0"
                         />
                       )}
 
-                      <h3 className="truncate text-xl font-bold text-white">
+                      <h3 className="truncate text-xl font-bold">
                         {platform.name}
                       </h3>
 
-                    </div>
+                      {platform.url && (
+                        <span className="shrink-0 text-base text-gray-400 transition-transform duration-300 group-hover:translate-x-0.5">
+                          ↗
+                        </span>
+                      )}
+                    </a>
 
-
-                    {/* ---------------------------------------
-                        FOLLOWERS / SUBSCRIBERS
-                    ---------------------------------------- */}
-
-                    <div className="content-followers">
-
+                    {/* FOLLOWER COUNT */}
+                    <div className="flex shrink-0 items-center gap-1.5">
                       <PeopleIcon
-                        sx={{
-                          fontSize: 18,
-                        }}
+                        sx={{ fontSize: 18 }}
                         className="text-gray-300"
                       />
 
                       <div>
-
                         <p className="text-lg font-bold leading-none text-white">
                           {platform.followers || "—"}
                         </p>
@@ -246,68 +174,23 @@ export default function Content() {
                             ? "Subscribers"
                             : "Followers"}
                         </p>
-
                       </div>
-
                     </div>
-
-
-                    {/* ---------------------------------------
-                        VISIT BUTTON - ICON ONLY
-                    ---------------------------------------- */}
-
-                    {platform.url && (
-                      <a
-                        href={platform.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Visit ${platform.name}`}
-                        className="content-visit-button"
-                      >
-                        {platform.name === "YouTube" ? (
-                          <PlayArrowIcon
-                            sx={{
-                              fontSize: 20,
-                            }}
-                          />
-                        ) : (
-                          <Icon
-                            sx={{
-                              fontSize: 20,
-                            }}
-                          />
-                        )}
-                      </a>
-                    )}
-
                   </div>
 
-
-                  {/* =================================================
-                      USERNAME
-                  ================================================== */}
-
+                  {/* USERNAME */}
                   <p className="mt-6 text-sm font-medium text-gray-400">
                     {platform.handle}
                   </p>
 
-
-                  {/* =================================================
-                      DESCRIPTION
-                  ================================================== */}
-
+                  {/* DESCRIPTION */}
                   <p className="mt-5 text-sm leading-6 text-gray-300">
                     {platform.description}
                   </p>
 
-
-                  {/* =================================================
-                      CONTENT TYPES
-                  ================================================== */}
-
+                  {/* CONTENT TYPES */}
                   {platform.contentTypes?.length > 0 && (
                     <div className="mt-6 flex flex-wrap gap-2">
-
                       {platform.contentTypes.map((type) => (
                         <span
                           key={type}
@@ -316,42 +199,24 @@ export default function Content() {
                           {type}
                         </span>
                       ))}
-
                     </div>
                   )}
-
                 </div>
               </motion.div>
             );
           })}
-
         </div>
 
-
-        {/* =====================================================
-            FOOTER TEXT
-        ====================================================== */}
-
+        {/* FOOTER TEXT */}
         <motion.p
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="mt-12 text-center text-gray-400"
         >
           {data.footerText}
         </motion.p>
-
       </div>
     </section>
   );

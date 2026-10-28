@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { ExternalLink } from "lucide-react";
@@ -6,9 +7,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import CodeIcon from "@mui/icons-material/Code";
 
 import { GitHubCalendar } from "react-github-calendar";
-
 import { getCodingProfiles } from "../../services/assetService";
-import "../../styles/animations.css";
 
 const iconMap = {
   GitHub: GitHubIcon,
@@ -17,8 +16,6 @@ const iconMap = {
 
 export default function CodingProfiles() {
   const [content, setContent] = useState(null);
-  const [selectedPlatform, setSelectedPlatform] =
-    useState("GitHub");
 
   useEffect(() => {
     const loadProfiles = async () => {
@@ -26,10 +23,7 @@ export default function CodingProfiles() {
         const data = await getCodingProfiles();
         setContent(data);
       } catch (error) {
-        console.error(
-          "Failed to load coding profiles:",
-          error
-        );
+        console.error("Failed to load coding profiles:", error);
       }
     };
 
@@ -49,182 +43,111 @@ export default function CodingProfiles() {
     content.data?.githubUrl ||
     `https://github.com/${githubUsername}`;
 
-  /* =========================================================
-     DIRECTIONAL 3D CARD EFFECT
-  ========================================================= */
-
-  const handleMouseMove = (event) => {
-    const card = event.currentTarget;
-
-    const rect = card.getBoundingClientRect();
-
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    const xPercent = x / rect.width;
-    const yPercent = y / rect.height;
-
-    const rotateY = (xPercent - 0.5) * 8;
-    const rotateX = (0.5 - yPercent) * 8;
-
-    card.style.setProperty(
-      "--rotate-x",
-      `${rotateX}deg`
-    );
-
-    card.style.setProperty(
-      "--rotate-y",
-      `${rotateY}deg`
-    );
-
-    card.style.setProperty(
-      "--glow-x",
-      `${xPercent * 100}%`
-    );
-
-    card.style.setProperty(
-      "--glow-y",
-      `${yPercent * 100}%`
-    );
-  };
-
-  const handleMouseLeave = (event) => {
-    const card = event.currentTarget;
-
-    card.style.setProperty("--rotate-x", "0deg");
-    card.style.setProperty("--rotate-y", "0deg");
-
-    card.style.setProperty("--glow-x", "50%");
-    card.style.setProperty("--glow-y", "50%");
-  };
-
   return (
     <section
       id="coding-profiles"
       className="relative overflow-hidden px-6 py-24 lg:px-8"
     >
-      {/* =====================================================
-          BACKGROUND
-      ====================================================== */}
-
+      {/* BACKGROUND */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-
-        {/* ===================================================
-            HEADING
-        ==================================================== */}
-
+        {/* HEADING */}
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <h2 className="mb-4 text-4xl font-bold uppercase text-white heading-reflection lg:text-5xl">
+          <h2 className="heading-reflection mb-4 text-4xl font-bold uppercase text-white lg:text-5xl">
             {content.data?.heading}
           </h2>
         </motion.div>
 
-
-        {/* ===================================================
-            PROFILE CARDS
-        ==================================================== */}
-
+        {/* PROFILE CARDS */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-
           {profiles.map((profile, index) => {
-
-            const Icon =
-              iconMap[profile.icon] || CodeIcon;
+            const Icon = iconMap[profile.icon] || CodeIcon;
 
             return (
               <motion.div
                 key={profile.platform}
-                initial={{
-                  opacity: 0,
-                  y: 30,
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover="hover"
+                style={{
+                  position: "relative",
+                  height: "100%",
+                  minHeight: "270px",
+                  padding: "1.75rem",
+                  borderRadius: "1.25rem",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(255,255,255,0.045)",
+                  backdropFilter: "blur(18px)",
+                  WebkitBackdropFilter: "blur(18px)",
+                  overflow: "hidden",
+                  transition: "border-color 0.3s ease",
                 }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                viewport={{
-                  once: true,
-                }}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.1,
-                }}
-                className="coding-card-wrapper"
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
               >
+                {/* INLINE HOVER GLOW */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  variants={{
+                    hover: { opacity: 1 },
+                  }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: "inherit",
+                    background:
+                      "linear-gradient(to bottom right, transparent 0%, transparent 55%, rgba(255,255,255,0.05) 100%)",
+                    pointerEvents: "none",
+                    zIndex: 0,
+                  }}
+                />
 
-                <div className="coding-card">
-
-                  {/* =========================================
-                      TOP ROW
-                  ========================================== */}
-
-                  <div className="coding-card-top">
-
-                    {/* Icon + Platform Name */}
-
-                    <div className="coding-platform">
-
+                {/* CARD CONTENT */}
+                <div
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
+                  {/* TOP ROW */}
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex min-w-0 items-center gap-3">
                       <Icon
-                        sx={{
-                          fontSize: 28,
-                        }}
-                        className="text-white"
+                        sx={{ fontSize: 28 }}
+                        className="shrink-0 text-white"
                       />
 
-                      <h3 className="text-xl font-bold text-white">
+                      <h3 className="truncate text-xl font-bold text-white">
                         {profile.platform}
                       </h3>
-
                     </div>
 
-
-                    {/* Visit Profile - ICON ONLY */}
-
+                    {/* VISIT PROFILE */}
                     <a
                       href={profile.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Visit ${profile.platform} profile`}
-                      className="coding-visit-button"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-black"
                     >
                       <ExternalLink size={18} />
                     </a>
-
                   </div>
-                  {/* =========================================
-                      USERNAME
-                  ========================================== */}
 
+                  {/* USERNAME */}
                   <p className="mt-5 text-sm font-medium text-gray-400">
                     {profile.username}
                   </p>
 
-                  {/* =========================================
-                      STAT
-                  ========================================== */}
-
+                  {/* STATS */}
                   <div className="mt-10">
-
                     <div className="text-2xl font-bold text-white">
                       {profile.stats}
                     </div>
@@ -232,37 +155,19 @@ export default function CodingProfiles() {
                     <p className="mt-3 text-sm leading-6 text-gray-300">
                       {profile.description}
                     </p>
-
                   </div>
-
                 </div>
-
               </motion.div>
             );
           })}
-
         </div>
 
-
-        {/* ===================================================
-            DESCRIPTION
-        ==================================================== */}
-
+        {/* SECTION DESCRIPTION */}
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="mt-12 text-center"
         >
           <p className="mx-auto mt-6 max-w-2xl text-gray-400">
@@ -270,33 +175,16 @@ export default function CodingProfiles() {
           </p>
         </motion.div>
 
-
-        {/* ===================================================
-            GITHUB CONTRIBUTION GRAPH
-        ==================================================== */}
-
+        {/* GITHUB CONTRIBUTION GRAPH */}
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="mt-16 rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-10 backdrop-blur-xl"
         >
-
           <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-
             <div>
-
               <h3 className="text-2xl font-bold text-white">
                 GitHub Contribution Activity
               </h3>
@@ -304,20 +192,13 @@ export default function CodingProfiles() {
               <p className="mt-2 text-sm text-gray-400">
                 My open-source contributions and coding consistency over the past year.
               </p>
-
             </div>
-
           </div>
 
-
-          {/* GitHub Calendar */}
-
+          {/* GITHUB CALENDAR */}
           <div className="overflow-x-auto rounded-2xl border border-white/10 bg-black/30 p-6">
-
             <div className="flex justify-center">
-
               <div className="w-fit">
-
                 <GitHubCalendar
                   username={githubUsername}
                   blockSize={14}
@@ -330,18 +211,12 @@ export default function CodingProfiles() {
                     color: "#d1d5db",
                   }}
                 />
-
               </div>
-
             </div>
-
           </div>
 
-
-          {/* GitHub Profile Link */}
-
+          {/* GITHUB PROFILE LINK */}
           <div className="mt-6 flex flex-col items-center gap-3 text-center">
-
             <p className="text-sm text-gray-400">
               Visit my GitHub profile to explore projects and contributions.
             </p>
@@ -352,19 +227,12 @@ export default function CodingProfiles() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/20"
             >
-
               <GitHubIcon fontSize="small" />
-
               View GitHub Profile
-
               <ExternalLink size={16} />
-
             </a>
-
           </div>
-
         </motion.div>
-
       </div>
     </section>
   );

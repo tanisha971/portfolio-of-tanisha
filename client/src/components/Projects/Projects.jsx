@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "motion/react";
-import { Filter } from "lucide-react";
+import { Filter, ChevronLeft, ChevronRight } from "lucide-react";
 
 import ProjectCard from "./ProjectCard";
 
@@ -26,6 +26,7 @@ export default function Projects() {
   const [selectedCategory, setSelectedCategory] =
     useState("All");
 
+  const swiperRef = useRef(null);
   // --------------------------------------------------
   // LOAD PROJECTS
   // --------------------------------------------------
@@ -405,11 +406,23 @@ export default function Projects() {
         -------------------------------------------------- */}
 
         {projects.length > 0 ? (
+          <div className="relative">
+            {/* LEFT ARROW */}
+            <button
+              type="button"
+              onClick={() => swiperRef.current?.slidePrev()}
+              aria-label="Previous project"
+              className="absolute left-0 top-1/2 z-30 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all duration-300 hover:bg-white hover:text-black md:-left-5 lg:-left-8"
+            >
+              <ChevronLeft size={32} strokeWidth={2} />
+            </button>
           <Swiper
             key={`${selectedYear}-${selectedCategory}`}
+            onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+              }}
             modules={[
               EffectCoverflow,
-              Navigation,
               Pagination,
             ]}
             effect="coverflow"
@@ -455,6 +468,16 @@ export default function Projects() {
               )
             )}
           </Swiper>
+          {/* RIGHT ARROW */}
+            <button
+              type="button"
+              onClick={() => swiperRef.current?.slideNext()}
+              aria-label="Next project"
+              className="absolute right-0 top-1/2 z-30 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all duration-300 hover:bg-white hover:text-black md:-right-5 lg:-right-8"
+            >
+              <ChevronRight size={32} strokeWidth={2} />
+            </button>
+          </div>
         ) : (
           /* --------------------------------------------------
               NO RESULTS
