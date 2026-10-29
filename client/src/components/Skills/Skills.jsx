@@ -1,7 +1,9 @@
+
 import { useEffect, useState } from "react";
 import { getSkills } from "../../services/skillService";
 import { motion } from "motion/react";
 import "../../styles/animations.css";
+import "../../styles/portfolio-theme.css";
 
 export default function Skills() {
   const [skills, setSkills] = useState([]);
@@ -29,47 +31,40 @@ export default function Skills() {
       }
 
       acc[skill.category].skills.push(skill);
-
       return acc;
     }, {})
   );
 
   // Split Tech Stack into two moving rows
   const midpoint = Math.ceil(skills.length / 2);
-
   const firstRow = skills.slice(0, midpoint);
   const secondRow = skills.slice(midpoint);
 
   return (
     <section
       id="skills"
-      className="py-24 px-6 lg:px-8 relative overflow-hidden"
+      className="skills-section relative overflow-hidden px-6 py-24 lg:px-8"
     >
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+      {/* Background */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="skills-background-glow absolute right-10 top-1/4 h-96 w-96 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-
+      <div className="relative z-10 mx-auto max-w-7xl">
         {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16 text-center"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4 heading-reflection">
+          <h2 className="skills-heading mb-4 text-4xl font-bold lg:text-5xl heading-reflection">
             SKILLS
           </h2>
-
         </motion.div>
 
-
-        {/* =====================================================
-            MOVING TECH STACK
-        ====================================================== */}
-
+        {/* Moving Tech Stack */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -77,143 +72,110 @@ export default function Skills() {
           transition={{ duration: 0.6 }}
           className="mb-20"
         >
-
-          {/* <h3 className="text-2xl font-bold text-white text-center mb-8">
-            Tech Stack
-          </h3> */}
-
-          {/* Row 1 → Moves RIGHT */}
-          <div className="relative overflow-hidden mb-5">
-
+          {/* Row 1 — Moves Right */}
+          <div className="relative mb-5 overflow-hidden">
             <motion.div
               className="flex w-max gap-4"
-              animate={{
-                x: ["-50%", "0%"],
-              }}
+              animate={{ x: ["-50%", "0%"] }}
               transition={{
                 duration: 25,
                 ease: "linear",
                 repeat: Infinity,
               }}
             >
-
-              {/* Duplicate row for seamless movement */}
               {[...firstRow, ...firstRow].map((skill, index) => (
                 <div
                   key={`${skill._id}-row1-${index}`}
-                  className="flex-shrink-0 px-8 py-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/10"
+                  className="skills-tech-pill flex-shrink-0 rounded-xl px-8 py-4 backdrop-blur-sm"
                 >
-                  <span className="text-gray-200 font-medium whitespace-nowrap">
+                  <span className="skills-body whitespace-nowrap font-medium">
                     {skill.name}
                   </span>
                 </div>
               ))}
-
             </motion.div>
-
           </div>
 
-
-          {/* Row 2 → Moves LEFT */}
+          {/* Row 2 — Moves Left */}
           <div className="relative overflow-hidden">
-
             <motion.div
               className="flex w-max gap-4"
-              animate={{
-                x: ["0%", "-50%"],
-              }}
+              animate={{ x: ["0%", "-50%"] }}
               transition={{
                 duration: 25,
                 ease: "linear",
                 repeat: Infinity,
               }}
             >
-
-              {/* Duplicate row for seamless movement */}
               {[...secondRow, ...secondRow].map((skill, index) => (
                 <div
                   key={`${skill._id}-row2-${index}`}
-                  className="flex-shrink-0 px-8 py-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/10"
+                  className="skills-tech-pill flex-shrink-0 rounded-xl px-8 py-4 backdrop-blur-sm"
                 >
-                  <span className="text-gray-200 font-medium whitespace-nowrap">
+                  <span className="skills-body whitespace-nowrap font-medium">
                     {skill.name}
                   </span>
                 </div>
               ))}
-
             </motion.div>
-
           </div>
-
         </motion.div>
 
-
-        {/* =====================================================
-            SKILL CATEGORIES + PERCENTAGES
-        ====================================================== */}
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
+        {/* Skill Categories + Percentages */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {skillCategories.map((category, categoryIndex) => (
-
             <motion.div
-  key={category.category}
-  initial={{ opacity: 0, y: 30 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true }}
-  transition={{
-    duration: 0.5,
-    delay: categoryIndex * 0.1,
-  }}
-  className="skill-glow-card"
->
-  <div className="skill-glow-card-inner">
-
-    <h3 className="text-xl font-bold text-white mb-6">
-      {category.category}
-    </h3>
-
-    <div className="space-y-6">
-      {category.skills.map((skill, skillIndex) => (
-        <div key={skill.name}>
-
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-300 font-medium">
-              {skill.name}
-            </span>
-
-            <span className="text-gray-400 text-sm">
-              {skill.level}%
-            </span>
-          </div>
-
-          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              whileInView={{
-                width: `${skill.level}%`,
-              }}
+              key={category.category}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{
-                duration: 1,
-                delay:
-                  categoryIndex * 0.1 +
-                  skillIndex * 0.1,
+                duration: 0.5,
+                delay: categoryIndex * 0.1,
               }}
-              className="h-full bg-gradient-to-r from-white to-gray-400 rounded-full"
-            />
-          </div>
+              className="skills-category-card"
+            >
+              <h3 className="skills-heading mb-6 text-xl font-bold">
+                {category.category}
+              </h3>
 
-        </div>
-      ))}
-    </div>
+              <div className="space-y-6">
+                {category.skills.map((skill, skillIndex) => (
+                  <div key={skill.name}>
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="skills-body font-medium">
+                        {skill.name}
+                      </span>
 
-  </div>
-</motion.div>
+                      <span className="skills-muted text-sm">
+                        {skill.level}%
+                      </span>
+                    </div>
 
+                    <div className="skills-progress-track h-2 w-full overflow-hidden rounded-full">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        whileInView={{
+                          width: `${skill.level}%`,
+                        }}
+                        viewport={{ once: true }}
+                        transition={{
+                          duration: 1,
+                          delay:
+                            categoryIndex * 0.1 +
+                            skillIndex * 0.1,
+                        }}
+                        className="skills-progress-fill h-full rounded-full"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           ))}
-
         </div>
+
+        {/* Footer Text */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -221,7 +183,7 @@ export default function Skills() {
           transition={{ duration: 0.6 }}
           className="mt-12 text-center"
         >
-          <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
+          <p className="skills-muted mx-auto mt-6 max-w-2xl">
             A comprehensive toolkit of modern technologies and frameworks I
             use to build amazing applications
           </p>

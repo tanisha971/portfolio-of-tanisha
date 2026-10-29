@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "motion/react";
@@ -18,17 +19,13 @@ export default function ProjectOverview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // --------------------------------------------------
-  // FETCH PROJECT
-  // --------------------------------------------------
-
   useEffect(() => {
     const loadProject = async () => {
       try {
         setLoading(true);
+        setError("");
 
         const response = await getProjectById(id);
-
         setProject(response.data);
       } catch (error) {
         console.error("Failed to load project:", error);
@@ -41,10 +38,6 @@ export default function ProjectOverview() {
     loadProject();
   }, [id]);
 
-  // --------------------------------------------------
-  // FORMAT DATE
-  // --------------------------------------------------
-
   const formatDate = (date) => {
     if (!date) return "Present";
 
@@ -54,60 +47,32 @@ export default function ProjectOverview() {
     });
   };
 
-  // --------------------------------------------------
   // LOADING
-  // --------------------------------------------------
-
   if (loading) {
     return (
-      <div
-        className="
-          flex
-          min-h-screen
-          items-center
-          justify-center
-          bg-black
-          text-white
-        "
-      >
-        Loading project...
+      <div className="project-overview-page flex min-h-screen items-center justify-center">
+        <p className="project-overview-muted">Loading project...</p>
       </div>
     );
   }
 
-  // --------------------------------------------------
   // ERROR
-  // --------------------------------------------------
-
   if (error || !project) {
     return (
-      <div
-        className="
-          flex
-          min-h-screen
-          flex-col
-          items-center
-          justify-center
-          gap-6
-          bg-black
-          text-white
-        "
-      >
-        <h1 className="text-2xl font-bold">
+      <div className="project-overview-page flex min-h-screen flex-col items-center justify-center gap-6 px-6">
+        <h1 className="project-overview-title text-2xl font-bold">
           Project not found
         </h1>
 
+        <p className="project-overview-muted">
+          {error || "This project is unavailable."}
+        </p>
+
         <Link
           to="/projects"
-          className="
-            rounded-xl
-            bg-white
-            px-6
-            py-3
-            font-semibold
-            text-black
-          "
+          className="button-glow inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
         >
+          <ArrowLeft size={18} />
           Back to Projects
         </Link>
       </div>
@@ -117,80 +82,43 @@ export default function ProjectOverview() {
   const categories = Array.isArray(project.category)
     ? project.category
     : project.category
-    ? [project.category]
-    : [];
+      ? [project.category]
+      : [];
 
   return (
-    <main
-      className="
-        min-h-screen
-        bg-black
-        px-6
-        pb-24
-        pt-28
-        text-white
-        lg:px-8
-      "
-    >
+    <main className="project-overview-page min-h-screen px-6 pb-24 pt-28 lg:px-8">
       <motion.div
-        initial={{
-          opacity: 0,
-          y: 30,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.5,
-        }}
-        className="
-          mx-auto
-          max-w-6xl
-        "
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mx-auto max-w-6xl"
       >
         {/* BACK */}
 
         <Link
           to="/projects"
-          className="
-            mb-10
-            inline-flex
-            items-center
-            gap-2
-            text-sm
-            font-semibold
-            text-gray-400
-            transition
-            hover:text-white
-          "
+          className="project-overview-back mb-10 inline-flex items-center gap-2 text-sm font-semibold"
         >
           <ArrowLeft size={18} />
-
           Back to Projects
         </Link>
 
         {/* HERO IMAGE */}
 
-        <div
-          className="
-            overflow-hidden
-            rounded-3xl
-            border
-            border-white/10
-            bg-white/5
-          "
-        >
-          <img
-            src={project.image}
-            alt={project.title}
-            className="
-              h-[300px]
-              w-full
-              object-cover
-              md:h-[480px]
-            "
-          />
+        <div className="project-overview-image overflow-hidden rounded-3xl border">
+          {project.image ? (
+            <img
+              src={project.image}
+              alt={project.title || "Project preview"}
+              className="h-[300px] w-full object-cover md:h-[480px]"
+            />
+          ) : (
+            <div className="project-overview-image-placeholder flex h-[300px] items-center justify-center md:h-[480px]">
+              <span className="project-overview-muted">
+                No project preview available
+              </span>
+            </div>
+          )}
         </div>
 
         {/* PROJECT HEADER */}
@@ -198,59 +126,28 @@ export default function ProjectOverview() {
         <div className="mt-10">
           {/* CATEGORIES */}
 
-          <div className="mb-5 flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <span
-                key={category}
-                className="
-                  rounded-full
-                  border
-                  border-white/10
-                  bg-white/10
-                  px-4
-                  py-2
-                  text-xs
-                  text-gray-300
-                "
-              >
-                {category}
-              </span>
-            ))}
-          </div>
+          {categories.length > 0 && (
+            <div className="mb-5 flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <span
+                  key={category}
+                  className="project-overview-category rounded-full border px-4 py-2 text-xs"
+                >
+                  {category}
+                </span>
+              ))}
+            </div>
+          )}
 
-          <div
-            className="
-              flex
-              flex-col
-              justify-between
-              gap-6
-              md:flex-row
-              md:items-start
-            "
-          >
+          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
             <div>
-              <h1
-                className="
-                  text-4xl
-                  font-bold
-                  tracking-tight
-                  md:text-5xl
-                "
-              >
+              <h1 className="project-overview-title text-4xl font-bold tracking-tight md:text-5xl">
                 {project.title}
               </h1>
 
               {/* DATE */}
 
-              <div
-                className="
-                  mt-4
-                  flex
-                  items-center
-                  gap-2
-                  text-gray-400
-                "
-              >
+              <div className="project-overview-muted mt-4 flex items-center gap-2">
                 <CalendarDays size={18} />
 
                 <span>
@@ -269,24 +166,9 @@ export default function ProjectOverview() {
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="
-                    inline-flex
-                    items-center
-                    gap-2
-                    rounded-xl
-                    border
-                    border-white/20
-                    bg-white/5
-                    px-5
-                    py-3
-                    font-semibold
-                    transition
-                    hover:bg-white
-                    hover:text-black
-                  "
+                  className="project-overview-action inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-semibold"
                 >
                   <GitHubIcon fontSize="small" />
-
                   GitHub
                 </a>
               )}
@@ -296,22 +178,9 @@ export default function ProjectOverview() {
                   href={project.live}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="
-                    inline-flex
-                    items-center
-                    gap-2
-                    rounded-xl
-                    bg-white
-                    px-5
-                    py-3
-                    font-semibold
-                    text-black
-                    transition
-                    hover:bg-gray-200
-                  "
+                  className="button-glow inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold"
                 >
                   <ExternalLink size={18} />
-
                   Live Demo
                 </a>
               )}
@@ -321,69 +190,30 @@ export default function ProjectOverview() {
 
         {/* CONTENT */}
 
-        <div
-          className="
-            mt-14
-            grid
-            gap-12
-            lg:grid-cols-[1fr_300px]
-          "
-        >
+        <div className="mt-14 grid gap-12 lg:grid-cols-[1fr_300px]">
           {/* LEFT */}
 
           <div>
-            <h2
-              className="
-                mb-5
-                text-2xl
-                font-bold
-              "
-            >
+            <h2 className="project-overview-title mb-5 text-2xl font-bold">
               Project Overview
             </h2>
 
-            <p
-              className="
-                text-base
-                leading-8
-                text-gray-300
-              "
-            >
+            <p className="project-overview-description text-base leading-8">
               {project.description}
             </p>
 
             {/* DETAILED BULLETS */}
 
             {project.details?.length > 0 && (
-              <ul
-                className="
-                  mt-8
-                  space-y-5
-                "
-              >
+              <ul className="mt-8 space-y-5">
                 {project.details.map((detail, index) => (
                   <li
                     key={index}
-                    className="
-                      flex
-                      gap-4
-                      text-gray-300
-                    "
+                    className="project-overview-description flex gap-4"
                   >
-                    <span
-                      className="
-                        mt-[10px]
-                        h-2
-                        w-2
-                        shrink-0
-                        rounded-full
-                        bg-white
-                      "
-                    />
+                    <span className="project-overview-bullet mt-[10px] h-2 w-2 shrink-0 rounded-full" />
 
-                    <span className="leading-7">
-                      {detail}
-                    </span>
+                    <span className="leading-7">{detail}</span>
                   </li>
                 ))}
               </ul>
@@ -393,45 +223,27 @@ export default function ProjectOverview() {
           {/* RIGHT */}
 
           <aside>
-            <div
-              className="
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/5
-                p-6
-                backdrop-blur-xl
-              "
-            >
-              <h2
-                className="
-                  mb-5
-                  text-lg
-                  font-bold
-                "
-              >
+            <div className="project-overview-panel rounded-2xl border p-6 backdrop-blur-xl">
+              <h2 className="project-overview-title mb-5 text-lg font-bold">
                 Tech Stack
               </h2>
 
-              <div className="flex flex-wrap gap-2">
-                {project.tech?.map((tech) => (
-                  <span
-                    key={tech}
-                    className="
-                      rounded-lg
-                      border
-                      border-white/10
-                      bg-white/10
-                      px-3
-                      py-2
-                      text-sm
-                      text-gray-300
-                    "
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
+              {project.tech?.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((tech) => (
+                    <span
+                      key={tech}
+                      className="project-overview-tech rounded-lg border px-3 py-2 text-sm"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="project-overview-muted text-sm">
+                  Tech stack not specified.
+                </p>
+              )}
             </div>
           </aside>
         </div>

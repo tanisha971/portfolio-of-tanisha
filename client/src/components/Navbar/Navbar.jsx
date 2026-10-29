@@ -1,12 +1,17 @@
+
 import { useEffect, useState } from "react";
-import { Download, Menu, X, ChevronDown } from "lucide-react";
+import {
+  Download,
+  Menu,
+  X,
+  ChevronDown,
+  Sun,
+  Moon,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { getResume } from "../../services/assetService";
-import "../../styles/animations.css";
 
-// ----------------------------------------
-// Navigation Links
-// ----------------------------------------
+import "../../styles/portfolio-theme.css";
 
 const primaryLinks = [
   { name: "Home", href: "/home", anchor: "home" },
@@ -19,85 +24,47 @@ const primaryLinks = [
 ];
 
 const moreLinks = [
-  {
-    name: "Coding Profiles",
-    href: "/coding-profiles",
-    anchor: "coding-profiles",
-  },
-  {
-    name: "Content Creation",
-    href: "/content",
-    anchor: "content",
-  },
-  {
-    name: "Contact",
-    href: "/contact",
-    anchor: "contact",
-  },
+  { name: "Coding Profiles", href: "/coding-profiles", anchor: "coding-profiles" },
+  { name: "Content Creation", href: "/content", anchor: "content" },
+  { name: "Contact", href: "/contact", anchor: "contact" },
 ];
-
-// ----------------------------------------
-// Google Drive Helpers
-// ----------------------------------------
 
 const getDriveFileId = (url) => {
   if (!url) return null;
 
-  // Format:
-  // https://drive.google.com/file/d/FILE_ID/view
   const fileMatch = url.match(/\/file\/d\/([^/]+)/);
+  if (fileMatch) return fileMatch[1];
 
-  if (fileMatch) {
-    return fileMatch[1];
-  }
-
-  // Format:
-  // https://drive.google.com/open?id=FILE_ID
-  // or
-  // https://drive.google.com/uc?id=FILE_ID
   const idMatch = url.match(/[?&]id=([^&]+)/);
-
-  if (idMatch) {
-    return idMatch[1];
-  }
+  if (idMatch) return idMatch[1];
 
   return null;
 };
 
 const getDriveDownloadUrl = (url) => {
   const fileId = getDriveFileId(url);
-
-  if (!fileId) {
-    return url;
-  }
+  if (!fileId) return url;
 
   return `https://drive.google.com/uc?export=download&id=${fileId}`;
 };
-
-// ----------------------------------------
-// Navbar
-// ----------------------------------------
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
-
   const [resumeUrl, setResumeUrl] = useState("");
 
-  // ----------------------------------------
-  // Load Resume From Backend
-  // ----------------------------------------
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") return "dark";
+    return window.localStorage.getItem("portfolio-theme") || "dark";
+  });
 
   useEffect(() => {
     const loadResume = async () => {
       try {
         const data = await getResume();
-
-        if (data?.url) {
-          setResumeUrl(data.url);
-        }
+        if (data?.url) setResumeUrl(data.url);
       } catch (error) {
         console.error("Failed to load resume:", error);
       }
@@ -106,9 +73,11 @@ export default function Navbar() {
     loadResume();
   }, []);
 
-  // ----------------------------------------
-  // Scroll Handling
-  // ----------------------------------------
+  // Apply the selected theme.
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem("portfolio-theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -136,53 +105,44 @@ export default function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll);
-
     handleScroll();
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ----------------------------------------
-  // Mobile Menu
-  // ----------------------------------------
+  const closeMobileMenu = () => setMobileOpen(false);
+  const downloadResumeUrl = getDriveDownloadUrl(resumeUrl);
 
-  const closeMobileMenu = () => {
-    setMobileOpen(false);
+  const toggleTheme = () => {
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
   };
 
-  // ----------------------------------------
-  // Resume URL
-  // ----------------------------------------
-
-  const downloadResumeUrl = getDriveDownloadUrl(resumeUrl);
+  const ThemeToggle = () => (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      className="theme-toggle"
+      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+      title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+    >
+      {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+    </button>
+  );
 
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "border-b border-white/10 bg-black/75 backdrop-blur-xl"
-          : "bg-transparent"
+        isScrolled ? "navbar-scrolled" : "navbar-transparent"
       }`}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-
         {/* Logo */}
-
-        <a
-          href="/home"
-          className="text-2xl font-bold tracking-wide text-white transition hover:text-gray-300"
-        >
-          Tanisha Ali<span className="text-gray-400">.</span>
-        </a>
+        <Link to="/home" className="navbar-logo text-2xl font-bold tracking-wide">
+          Tanisha Ali<span className="navbar-accent">.</span>
+        </Link>
 
         {/* Desktop Navigation */}
-
-        <nav className="hidden items-center gap-8 lg:flex">
-
-          {/* Primary Links */}
-
+        <nav className="hidden items-center gap-7 lg:flex">
           {primaryLinks.map((link) => {
             const isActive = activeSection === link.anchor;
 
@@ -190,16 +150,13 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`relative text-sm font-medium transition-all duration-300 ${
-                  isActive
-                    ? "text-white"
-                    : "text-gray-400 hover:text-white"
+                className={`navbar-link relative text-sm font-medium ${
+                  isActive ? "active" : ""
                 }`}
               >
                 {link.name}
-
                 <span
-                  className={`absolute -bottom-2 left-0 h-[2px] bg-white transition-all duration-300 ${
+                  className={`navbar-link-underline absolute -bottom-2 left-0 h-[2px] transition-all duration-200 ${
                     isActive ? "w-full" : "w-0"
                   }`}
                 />
@@ -208,119 +165,103 @@ export default function Navbar() {
           })}
 
           {/* More Dropdown */}
-
           <div className="relative">
             <button
               type="button"
               onClick={() => setMoreOpen((prev) => !prev)}
-              className="flex items-center gap-1 text-sm font-medium text-gray-400 transition hover:text-white"
+              className="navbar-link flex items-center gap-1 text-sm font-medium"
+              aria-expanded={moreOpen}
             >
               More
-
               <ChevronDown
                 size={16}
-                className={`transition duration-300 ${
+                className={`transition-transform duration-200 ${
                   moreOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
 
             {moreOpen && (
-              <div className="absolute right-0 mt-4 w-64 overflow-hidden rounded-2xl border border-white/10 bg-black/95 shadow-2xl backdrop-blur-xl">
-
+              <div className="navbar-dropdown absolute right-0 mt-4 w-64 overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-xl">
                 {moreLinks.map((item) => (
                   <Link
                     key={item.name}
                     to={item.href}
                     onClick={() => setMoreOpen(false)}
-                    className="block px-5 py-3 text-sm text-gray-300 transition hover:bg-white/10 hover:text-white"
+                    className="navbar-dropdown-link block px-5 py-3 text-sm"
                   >
                     {item.name}
                   </Link>
                 ))}
 
-                <div className="mx-4 border-t border-white/10" />
+                <div className="mx-4 border-t navbar-divider" />
 
                 <Link
                   to="/login"
                   onClick={() => setMoreOpen(false)}
-                  className="block px-5 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
+                  className="navbar-admin-link block px-5 py-3 text-sm font-semibold"
                 >
                   Admin Login
                 </Link>
-
               </div>
             )}
           </div>
 
-          {/* Resume */}
+          <ThemeToggle />
 
+          {/* Resume */}
           {resumeUrl && (
             <a
-  href={downloadResumeUrl}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="
-    cv-hover
-    flex
-    items-center
-    gap-2
-    rounded-xl
-    px-5
-    py-2.5
-    text-sm
-    font-semibold
-    transition-all
-    duration-300
-  "
->
-  <Download size={18} />
-  Download CV
-</a>
+              href={downloadResumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="button-glow flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold"
+            >
+              <Download size={18} />
+              Download CV
+            </a>
           )}
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Controls */}
+        <div className="flex items-center gap-3 lg:hidden">
+          <ThemeToggle />
 
-        <button
-          type="button"
-          onClick={() => setMobileOpen((prev) => !prev)}
-          className="text-white lg:hidden"
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+          <button
+            type="button"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            className="navbar-menu-button"
+            aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
-
       <div
         className={`overflow-hidden transition-all duration-300 lg:hidden ${
           mobileOpen ? "max-h-screen" : "max-h-0"
         }`}
       >
-        <div className="border-t border-white/10 bg-black/95 px-6 py-6 backdrop-blur-xl">
-
-          <div className="flex flex-col gap-6">
-
-            {/* Primary Links */}
-
+        <div className="navbar-mobile-menu border-t px-6 py-6 backdrop-blur-xl">
+          <div className="flex flex-col gap-5">
             {primaryLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.href}
                 onClick={closeMobileMenu}
-                className="text-gray-300 transition hover:text-white"
+                className={`navbar-link ${
+                  activeSection === link.anchor ? "active" : ""
+                }`}
               >
                 {link.name}
               </Link>
             ))}
 
-            {/* More */}
-
-            <div className="border-t border-white/10 pt-4">
-
-              <p className="mb-4 text-xs uppercase tracking-widest text-gray-500">
+            <div className="navbar-mobile-more border-t pt-4">
+              <p className="navbar-muted mb-3 text-xs uppercase tracking-widest">
                 More
               </p>
 
@@ -329,25 +270,20 @@ export default function Navbar() {
                   key={link.name}
                   to={link.href}
                   onClick={closeMobileMenu}
-                  className="block py-2 text-gray-300 transition hover:text-white"
+                  className="navbar-link block py-2"
                 >
                   {link.name}
                 </Link>
               ))}
 
-              {/* Admin Login */}
-
               <Link
                 to="/login"
                 onClick={closeMobileMenu}
-                className="mt-3 block rounded-xl border border-white/20 px-5 py-3 text-center font-semibold text-white transition hover:bg-white hover:text-black"
+                className="navbar-admin-link mt-3 block rounded-xl border px-5 py-3 text-center font-semibold"
               >
                 Admin Login
               </Link>
-
             </div>
-
-            {/* Mobile Resume */}
 
             {resumeUrl && (
               <a
@@ -355,13 +291,12 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={closeMobileMenu}
-                className="flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-black transition-all duration-500 bg-gradient-to-br to-white via-black from-red-500 bg-size-200 hover:bg-right-bottom"
+                className="button-glow mt-2 flex items-center justify-center gap-2 rounded-full px-5 py-3 text-center font-semibold"
               >
                 <Download size={18} />
                 Download CV
               </a>
             )}
-
           </div>
         </div>
       </div>

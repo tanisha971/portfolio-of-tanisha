@@ -1,13 +1,15 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
+
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import PeopleIcon from "@mui/icons-material/People";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import { getContent } from "../../services/assetService";
+
+import "../../styles/portfolio-theme.css";
 
 const platformIcons = {
   Instagram: InstagramIcon,
@@ -47,13 +49,13 @@ export default function Content() {
   return (
     <section
       id="content"
-      className="relative overflow-hidden px-6 py-24 lg:px-8"
+      className="content-theme-section relative overflow-hidden px-6 py-24 lg:px-8"
     >
-      {/* BACKGROUND */}
+      {/* BACKGROUND DECORATION */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-10 top-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
+        <div className="content-theme-orb absolute left-10 top-1/4 h-96 w-96 rounded-full blur-3xl" />
 
-        <div className="absolute bottom-1/4 right-10 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
+        <div className="content-theme-orb absolute bottom-1/4 right-10 h-96 w-96 rounded-full blur-3xl" />
       </div>
 
       {/* MAIN CONTENT */}
@@ -66,13 +68,15 @@ export default function Content() {
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <h2 className="heading-reflection mb-4 text-4xl font-bold uppercase text-white lg:text-5xl">
+          <h2 className="content-theme-title heading-reflection mb-4 text-4xl font-bold uppercase lg:text-5xl">
             {data.heading || "Content Creation"}
           </h2>
 
-          <p className="mx-auto mt-8 max-w-2xl text-gray-400">
-            {data.intro}
-          </p>
+          {data.intro && (
+            <p className="content-theme-muted mx-auto mt-8 max-w-2xl">
+              {data.intro}
+            </p>
+          )}
         </motion.div>
 
         {/* PLATFORM CARDS */}
@@ -90,86 +94,68 @@ export default function Content() {
                   duration: 0.6,
                   delay: index * 0.1,
                 }}
-                whileHover="hover"
-                style={{
-                  position: "relative",
-                  height: "100%",
-                  minHeight: "360px",
-                  padding: "1.75rem",
-                  borderRadius: "1.25rem",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  background: "rgba(255,255,255,0.045)",
-                  backdropFilter: "blur(18px)",
-                  WebkitBackdropFilter: "blur(18px)",
-                  overflow: "hidden",
-                  transition: "border-color 0.3s ease",
-                }}
+                whileHover={{ y: -4 }}
+                className="content-theme-card group relative h-full min-h-[360px] overflow-hidden rounded-2xl border p-7 backdrop-blur-xl"
               >
-                {/* INLINE HOVER GLOW */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  variants={{
-                    hover: { opacity: 1 },
-                  }}
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    borderRadius: "inherit",
-                    background:
-                      "linear-gradient(to bottom right, transparent 0%, transparent 55%, rgba(255,255,255,0.05) 100%)",
-                    pointerEvents: "none",
-                    zIndex: 0,
-                  }}
-                />
+                {/* HOVER GLOW */}
+                <div className="content-card-glow pointer-events-none absolute inset-0 rounded-2xl" />
 
                 {/* CARD CONTENT */}
-                <div
-                  style={{
-                    position: "relative",
-                    zIndex: 1,
-                  }}
-                >
+                <div className="relative z-10">
                   {/* TOP ROW */}
                   <div className="flex w-full items-center justify-between gap-4">
-                    {/* CLICKABLE PLATFORM ICON + NAME */}
-                    <a
-                      href={platform.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Visit ${platform.name}`}
-                      className="flex min-w-0 flex-1 items-center gap-2.5 text-white transition-colors duration-300 hover:text-gray-300"
-                    >
-                      {Icon && (
-                        <Icon
-                          sx={{ fontSize: 28 }}
-                          className="shrink-0"
-                        />
-                      )}
+                    {/* PLATFORM ICON + NAME */}
+                    {platform.url ? (
+                      <a
+                        href={platform.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Visit ${platform.name}`}
+                        className="content-platform-link flex min-w-0 flex-1 items-center gap-2.5"
+                      >
+                        {Icon && (
+                          <Icon
+                            sx={{ fontSize: 28 }}
+                            className="content-platform-icon shrink-0"
+                          />
+                        )}
 
-                      <h3 className="truncate text-xl font-bold">
-                        {platform.name}
-                      </h3>
+                        <h3 className="content-theme-title truncate text-xl font-bold">
+                          {platform.name}
+                        </h3>
 
-                      {platform.url && (
-                        <span className="shrink-0 text-base text-gray-400 transition-transform duration-300 group-hover:translate-x-0.5">
+                        <span className="content-link-arrow shrink-0 text-base transition-transform duration-300 group-hover:translate-x-0.5">
                           ↗
                         </span>
-                      )}
-                    </a>
+                      </a>
+                    ) : (
+                      <div className="flex min-w-0 flex-1 items-center gap-2.5">
+                        {Icon && (
+                          <Icon
+                            sx={{ fontSize: 28 }}
+                            className="content-platform-icon shrink-0"
+                          />
+                        )}
+
+                        <h3 className="content-theme-title truncate text-xl font-bold">
+                          {platform.name}
+                        </h3>
+                      </div>
+                    )}
 
                     {/* FOLLOWER COUNT */}
                     <div className="flex shrink-0 items-center gap-1.5">
                       <PeopleIcon
                         sx={{ fontSize: 18 }}
-                        className="text-gray-300"
+                        className="content-follower-icon"
                       />
 
                       <div>
-                        <p className="text-lg font-bold leading-none text-white">
+                        <p className="content-theme-title text-lg font-bold leading-none">
                           {platform.followers || "—"}
                         </p>
 
-                        <p className="mt-1 text-[10px] text-gray-500">
+                        <p className="content-theme-subtle mt-1 text-[10px]">
                           {platform.name === "YouTube"
                             ? "Subscribers"
                             : "Followers"}
@@ -179,14 +165,18 @@ export default function Content() {
                   </div>
 
                   {/* USERNAME */}
-                  <p className="mt-6 text-sm font-medium text-gray-400">
-                    {platform.handle}
-                  </p>
+                  {platform.handle && (
+                    <p className="content-theme-muted mt-6 text-sm font-medium">
+                      {platform.handle}
+                    </p>
+                  )}
 
                   {/* DESCRIPTION */}
-                  <p className="mt-5 text-sm leading-6 text-gray-300">
-                    {platform.description}
-                  </p>
+                  {platform.description && (
+                    <p className="content-theme-description mt-5 text-sm leading-6">
+                      {platform.description}
+                    </p>
+                  )}
 
                   {/* CONTENT TYPES */}
                   {platform.contentTypes?.length > 0 && (
@@ -194,7 +184,7 @@ export default function Content() {
                       {platform.contentTypes.map((type) => (
                         <span
                           key={type}
-                          className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-gray-300"
+                          className="content-type-tag rounded-lg border px-3 py-1.5 text-xs"
                         >
                           {type}
                         </span>
@@ -208,15 +198,17 @@ export default function Content() {
         </div>
 
         {/* FOOTER TEXT */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-12 text-center text-gray-400"
-        >
-          {data.footerText}
-        </motion.p>
+        {data.footerText && (
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="content-theme-muted mt-12 text-center"
+          >
+            {data.footerText}
+          </motion.p>
+        )}
       </div>
     </section>
   );

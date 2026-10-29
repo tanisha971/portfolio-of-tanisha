@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useRef } from "react";
 import { motion } from "motion/react";
 import { Filter, ChevronLeft, ChevronRight } from "lucide-react";
@@ -5,7 +6,7 @@ import { Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import ProjectCard from "./ProjectCard";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
+import { EffectCoverflow, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -23,14 +24,11 @@ export default function Projects() {
   const [categories, setCategories] = useState([]);
 
   const [selectedYear, setSelectedYear] = useState("All");
-  const [selectedCategory, setSelectedCategory] =
-    useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const swiperRef = useRef(null);
-  // --------------------------------------------------
-  // LOAD PROJECTS
-  // --------------------------------------------------
 
+  // LOAD PROJECTS
   useEffect(() => {
     loadProjects();
   }, []);
@@ -38,14 +36,9 @@ export default function Projects() {
   const loadProjects = async () => {
     try {
       const response = await getProjects();
-
       const data = response.data || [];
 
-      // --------------------------------------------------
-      // SORT PROJECTS
-      // Newest → Oldest based on START DATE
-      // --------------------------------------------------
-
+      // Newest to oldest
       const sortedData = [...data].sort(
         (a, b) =>
           new Date(b.startDate || 0) -
@@ -55,29 +48,20 @@ export default function Projects() {
       setAllProjects(sortedData);
       setProjects(sortedData);
 
-      // --------------------------------------------------
-      // EXTRACT UNIQUE STARTING YEARS
-      // --------------------------------------------------
-
+      // Extract unique starting years
       const uniqueYears = [
         ...new Set(
           sortedData
             .filter((project) => project.startDate)
             .map((project) =>
-              new Date(
-                project.startDate
-              ).getFullYear()
+              new Date(project.startDate).getFullYear()
             )
         ),
       ].sort((a, b) => b - a);
 
       setYears(uniqueYears);
 
-      // --------------------------------------------------
-      // EXTRACT UNIQUE CATEGORIES
-      // FROM MONGODB PROJECT DATA
-      // --------------------------------------------------
-
+      // Extract unique categories
       const uniqueCategories = [
         ...new Set(
           sortedData.flatMap((project) => {
@@ -92,71 +76,42 @@ export default function Projects() {
             return [];
           })
         ),
-      ].sort((a, b) =>
-        a.localeCompare(b)
-      );
+      ].sort((a, b) => a.localeCompare(b));
 
       setCategories(uniqueCategories);
-
     } catch (error) {
-      console.error(
-        "Failed to load projects:",
-        error
-      );
+      console.error("Failed to load projects:", error);
     }
   };
 
-  // --------------------------------------------------
   // FILTER PROJECTS
-  // --------------------------------------------------
-
   useEffect(() => {
     let filtered = [...allProjects];
 
-    // --------------------------------------------------
-    // YEAR FILTER
-    // ONLY START YEAR IS USED
-    // --------------------------------------------------
-
+    // Year filter
     if (selectedYear !== "All") {
       filtered = filtered.filter((project) => {
-        if (!project.startDate) {
-          return false;
-        }
-
-        const startYear = new Date(
-          project.startDate
-        ).getFullYear();
+        if (!project.startDate) return false;
 
         return (
-          startYear === Number(selectedYear)
+          new Date(project.startDate).getFullYear() ===
+          Number(selectedYear)
         );
       });
     }
 
-    // --------------------------------------------------
-    // CATEGORY FILTER
-    // --------------------------------------------------
-
+    // Category filter
     if (selectedCategory !== "All") {
       filtered = filtered.filter((project) => {
         if (Array.isArray(project.category)) {
-          return project.category.includes(
-            selectedCategory
-          );
+          return project.category.includes(selectedCategory);
         }
 
-        return (
-          project.category === selectedCategory
-        );
+        return project.category === selectedCategory;
       });
     }
 
-    // --------------------------------------------------
-    // SORT FILTERED PROJECTS
-    // NEWEST → OLDEST
-    // --------------------------------------------------
-
+    // Newest to oldest
     filtered.sort(
       (a, b) =>
         new Date(b.startDate || 0) -
@@ -164,376 +119,178 @@ export default function Projects() {
     );
 
     setProjects(filtered);
-
-  }, [
-    selectedYear,
-    selectedCategory,
-    allProjects,
-  ]);
+  }, [selectedYear, selectedCategory, allProjects]);
 
   return (
     <section
       id="projects"
-      className="
-        relative
-        overflow-hidden
-        px-6
-        py-24
-        lg:px-8
-      "
+      className="projects-theme-section relative overflow-hidden px-6 py-24 lg:px-8"
     >
+      {/* BACKGROUND */}
 
-      {/* --------------------------------------------------
-          BACKGROUND
-      -------------------------------------------------- */}
-
-      <div className="absolute inset-0">
-        <div
-          className="
-            absolute
-            bottom-1/4
-            left-10
-            h-96
-            w-96
-            rounded-full
-            bg-white/5
-            blur-3xl
-          "
-        />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="projects-theme-orb absolute bottom-1/4 left-10 h-96 w-96 rounded-full blur-3xl" />
       </div>
 
-      <div
-        className="
-          relative
-          z-10
-          mx-auto
-          max-w-7xl
-        "
-      >
-
-        {/* --------------------------------------------------
-            HEADING
-        -------------------------------------------------- */}
+      <div className="relative z-10 mx-auto max-w-7xl">
+        {/* HEADING */}
 
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="mb-12 text-center"
         >
-          <h2
-            className="
-              mb-4
-              text-4xl
-              font-bold
-              text-white
-              lg:text-5xl heading-reflection
-            "
-          >
+          <h2 className="projects-theme-title heading-reflection mb-4 text-4xl font-bold lg:text-5xl">
             PROJECTS
           </h2>
-
-          {/* <p
-            className="
-              mx-auto
-              mt-6
-              max-w-2xl
-              text-gray-400
-            "
-          >
-            A showcase of my best work, from
-            award-winning hackathon projects to
-            full-stack applications
-          </p> */}
         </motion.div>
 
-        {/* --------------------------------------------------
-            FILTERS
-        -------------------------------------------------- */}
+        {/* FILTERS */}
 
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.5,
-          }}
-          className="
-            mb-14
-            flex
-            flex-col
-            items-center
-            justify-center
-            gap-4
-            md:flex-row
-          "
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-14 flex flex-col items-center justify-center gap-4 md:flex-row"
         >
+          {/* Filter icon */}
 
-          {/* Filter Icon */}
-          <div
-            className="
-              hidden
-              h-11
-              w-11
-              items-center
-              justify-center
-              rounded-xl
-              border
-              border-white/10
-              bg-white/10
-              text-white
-              md:flex
-            "
-          >
+          <div className="projects-filter-icon hidden h-11 w-11 items-center justify-center rounded-xl border md:flex">
             <Filter size={18} />
           </div>
 
-          {/* --------------------------------------------------
-              YEAR FILTER
-          -------------------------------------------------- */}
+          {/* Year filter */}
 
           <select
             value={selectedYear}
-            onChange={(e) =>
-              setSelectedYear(e.target.value)
-            }
-            className="
-              w-full
-              min-w-[180px]
-              cursor-pointer
-              rounded-xl
-              border
-              border-white/10
-              bg-white/10
-              px-5
-              py-3
-              text-white
-              outline-none
-              backdrop-blur-xl
-              transition-all
-              hover:border-white/30
-              md:w-auto
-            "
+            onChange={(e) => setSelectedYear(e.target.value)}
+            aria-label="Filter projects by year"
+            className="projects-filter-select w-full min-w-[180px] cursor-pointer rounded-xl border px-5 py-3 outline-none backdrop-blur-xl transition-colors md:w-auto"
           >
-            <option
-              value="All"
-              className="bg-gray-900"
-            >
-              All Years
-            </option>
+            <option value="All">All Years</option>
 
             {years.map((year) => (
-              <option
-                key={year}
-                value={year}
-                className="bg-gray-900"
-              >
+              <option key={year} value={year}>
                 {year}
               </option>
             ))}
           </select>
 
-          {/* --------------------------------------------------
-              CATEGORY FILTER
-          -------------------------------------------------- */}
+          {/* Category filter */}
 
           <select
             value={selectedCategory}
-            onChange={(e) =>
-              setSelectedCategory(
-                e.target.value
-              )
-            }
-            className="
-              w-full
-              min-w-[200px]
-              cursor-pointer
-              rounded-xl
-              border
-              border-white/10
-              bg-white/10
-              px-5
-              py-3
-              text-white
-              outline-none
-              backdrop-blur-xl
-              transition-all
-              hover:border-white/30
-              md:w-auto
-            "
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            aria-label="Filter projects by category"
+            className="projects-filter-select w-full min-w-[200px] cursor-pointer rounded-xl border px-5 py-3 outline-none backdrop-blur-xl transition-colors md:w-auto"
           >
-            <option
-              value="All"
-              className="bg-gray-900"
-            >
-              All Domains
-            </option>
+            <option value="All">All Domains</option>
 
             {categories.map((category) => (
-              <option
-                key={category}
-                value={category}
-                className="bg-gray-900"
-              >
+              <option key={category} value={category}>
                 {category}
               </option>
             ))}
           </select>
-
         </motion.div>
 
-        {/* --------------------------------------------------
-            PROJECT SLIDER
-        -------------------------------------------------- */}
+        {/* PROJECT SLIDER */}
 
         {projects.length > 0 ? (
-          <div className="relative">
+          <div className="projects-slider relative">
             {/* LEFT ARROW */}
+
             <button
               type="button"
               onClick={() => swiperRef.current?.slidePrev()}
               aria-label="Previous project"
-              className="absolute left-0 top-1/2 z-30 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all duration-300 hover:bg-white hover:text-black md:-left-5 lg:-left-8"
+              className="projects-slider-arrow absolute left-0 top-1/2 z-30 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full md:-left-5 lg:-left-8"
             >
               <ChevronLeft size={32} strokeWidth={2} />
             </button>
-          <Swiper
-            key={`${selectedYear}-${selectedCategory}`}
-            onSwiper={(swiper) => {
+
+            <Swiper
+              key={`${selectedYear}-${selectedCategory}`}
+              onSwiper={(swiper) => {
                 swiperRef.current = swiper;
               }}
-            modules={[
-              EffectCoverflow,
-              Pagination,
-            ]}
-            effect="coverflow"
-            centeredSlides={true}
-            grabCursor={true}
-            loop={projects.length > 2}
-            navigation
-            pagination={{
-              clickable: true,
-            }}
-            coverflowEffect={{
-              rotate: 0,
-              stretch: 0,
-              depth: 180,
-              modifier: 1.5,
-              scale: 0.9,
-              slideShadows: false,
-            }}
-            breakpoints={{
-              0: {
-                slidesPerView: 1.1,
-              },
-
-              768: {
-                slidesPerView: 1.8,
-              },
-
-              1200: {
-                slidesPerView: 2.3,
-              },
-            }}
-          >
-            {projects.map(
-              (project, index) => (
-                <SwiperSlide
-                  key={project._id}
-                >
+              modules={[EffectCoverflow, Pagination]}
+              effect="coverflow"
+              centeredSlides
+              grabCursor
+              loop={projects.length > 2}
+              pagination={{ clickable: true }}
+              coverflowEffect={{
+                rotate: 0,
+                stretch: 0,
+                depth: 180,
+                modifier: 1.5,
+                scale: 0.9,
+                slideShadows: false,
+              }}
+              breakpoints={{
+                0: {
+                  slidesPerView: 1.1,
+                },
+                768: {
+                  slidesPerView: 1.8,
+                },
+                1200: {
+                  slidesPerView: 2.3,
+                },
+              }}
+            >
+              {projects.map((project, index) => (
+                <SwiperSlide key={project._id}>
                   <ProjectCard
                     project={project}
                     index={index}
                   />
                 </SwiperSlide>
-              )
-            )}
-          </Swiper>
-          {/* RIGHT ARROW */}
+              ))}
+            </Swiper>
+
+            {/* RIGHT ARROW */}
+
             <button
               type="button"
               onClick={() => swiperRef.current?.slideNext()}
               aria-label="Next project"
-              className="absolute right-0 top-1/2 z-30 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all duration-300 hover:bg-white hover:text-black md:-right-5 lg:-right-8"
+              className="projects-slider-arrow absolute right-0 top-1/2 z-30 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full md:-right-5 lg:-right-8"
             >
               <ChevronRight size={32} strokeWidth={2} />
             </button>
           </div>
         ) : (
-          /* --------------------------------------------------
-              NO RESULTS
-          -------------------------------------------------- */
+          /* NO RESULTS */
 
           <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            className="
-              py-20
-              text-center
-            "
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="py-20 text-center"
           >
-            <p
-              className="
-                text-lg
-                text-gray-400
-              "
-            >
-              No projects found for the
-              selected filters.
+            <p className="projects-theme-muted text-lg">
+              No projects found for the selected filters.
             </p>
           </motion.div>
         )}
 
-        {/* --------------------------------------------------
-            BOTTOM INFO
-        -------------------------------------------------- */}
+        {/* BOTTOM INFO */}
 
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="mt-12 text-center"
         >
-          <p className="text-gray-400">
-            Building, experimenting, and learning
-            through real-world projects.
+          <p className="projects-theme-muted">
+            Building, experimenting, and learning through real-world projects.
           </p>
         </motion.div>
-
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { ArrowUp, Heart } from "lucide-react";
@@ -10,6 +11,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 
 import { getFooter } from "../../services/assetService";
+import "../../styles/portfolio-theme.css";
 
 const iconMap = {
   GitHub: GitHubIcon,
@@ -29,10 +31,7 @@ export default function Footer() {
         const data = await getFooter();
         setContent(data);
       } catch (error) {
-        console.error(
-          "Failed to load footer:",
-          error
-        );
+        console.error("Failed to load footer:", error);
       }
     };
 
@@ -46,134 +45,90 @@ export default function Footer() {
     });
   };
 
-  if (!content) {
-    return null;
-  }
+  if (!content) return null;
 
   const data = content.data || {};
-
   const footerLinks = data.quickLinks || [];
   const socialLinks = data.socialLinks || [];
-
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-white/10 px-6 py-12 lg:px-8">
+    <footer className="footer-theme-section relative overflow-hidden px-6 py-12 lg:px-8">
+      {/* Decorative grid */}
+      <div
+        aria-hidden="true"
+        className="footer-theme-grid pointer-events-none absolute inset-0"
+      />
 
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+      {/* Ambient glow */}
+      <div
+        aria-hidden="true"
+        className="footer-theme-glow pointer-events-none absolute -bottom-32 left-1/3 h-72 w-72 rounded-full blur-3xl"
+      />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-
-        <div className="mb-12 grid grid-cols-1 gap-12 md:grid-cols-3">
-
+        <div className="mb-12 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
           {/* Brand */}
-
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-
-            <h3 className="mb-4 text-2xl font-bold text-white">
+            <h3 className="footer-theme-brand mb-4 text-2xl font-bold">
               {data.brandName}
             </h3>
 
-            <p className="leading-relaxed text-gray-400">
+            <p className="footer-theme-muted max-w-sm leading-relaxed">
               {data.brandDescription}
             </p>
-
           </motion.div>
 
           {/* Quick Links */}
-
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 0.5,
-              delay: 0.1,
-            }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className="md:mx-auto"
           >
-
-            <h4 className="mb-5 text-lg font-bold text-white">
+            <h4 className="footer-theme-heading mb-5 text-lg font-bold">
               Quick Links
             </h4>
 
-            <div className="grid grid-cols-2 gap-x-12 gap-y-2">
-
+            <div className="grid grid-cols-2 gap-x-8 gap-y-3 sm:gap-x-12">
               {footerLinks.map((column, columnIndex) => (
-
-                <ul
-                  key={columnIndex}
-                  className="space-y-3"
-                >
-
+                <ul key={columnIndex} className="space-y-3">
                   {column.map((link) => (
-
                     <li key={link.name}>
-
                       <a
                         href={link.href}
-                        className="text-gray-400 transition-colors duration-300 hover:text-white"
+                        className="footer-theme-link"
                       >
                         {link.name}
                       </a>
-
                     </li>
-
                   ))}
-
                 </ul>
-
               ))}
-
             </div>
-
           </motion.div>
 
-          {/* Social */}
-
+          {/* Social Links */}
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 0.5,
-              delay: 0.2,
-            }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="md:ml-auto"
           >
-
-            <h4 className="mb-4 text-lg font-bold text-white">
+            <h4 className="footer-theme-heading mb-4 text-lg font-bold">
               Connect
             </h4>
 
-            <div className="grid w-fit grid-cols-3 gap-6">
+            <div className="grid w-fit grid-cols-3 gap-4">
               {socialLinks.map((social, index) => {
-
-                const Icon =
-                  iconMap[social.icon] || EmailIcon;
+                const Icon = iconMap[social.icon] || EmailIcon;
 
                 return (
                   <a
@@ -182,100 +137,68 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="group transition-all duration-300 hover:-translate-y-1"
+                    title={social.label}
+                    className="footer-theme-social"
                   >
-
                     <Icon
-                      sx={{
-                        fontSize: 24,
-                      }}
-                      className="text-gray-400 transition-all duration-300"
+                      sx={{ fontSize: 23 }}
+                      className="footer-theme-social-icon"
                     />
-
                   </a>
                 );
               })}
-
             </div>
-
           </motion.div>
-
         </div>
 
-        {/* Divider */}
-
-        <div className="border-t border-white/10 pt-8">
-
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-
+        {/* Footer Bottom */}
+        <div className="footer-theme-divider border-t pt-8">
+          <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
             <motion.p
-              initial={{
-                opacity: 0,
-              }}
-              whileInView={{
-                opacity: 1,
-              }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{
-                duration: 0.5,
-              }}
-              className="flex items-center gap-2 text-sm text-gray-400"
+              transition={{ duration: 0.5 }}
+              className="footer-theme-muted flex flex-wrap items-center justify-center gap-2 text-center text-sm"
             >
-
               <span>
                 &copy; {currentYear} {data.copyright}
               </span>
 
               <Heart
                 size={16}
-                className="fill-red-500 text-red-500"
+                className="footer-theme-heart fill-current"
+                aria-label="Made with love"
               />
-
             </motion.p>
 
             <motion.button
-              initial={{
-                opacity: 0,
-              }}
-              whileInView={{
-                opacity: 1,
-              }}
+              type="button"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{
-                duration: 0.5,
-              }}
+              transition={{ duration: 0.5 }}
               onClick={scrollToTop}
-              className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-4 py-2 text-white transition-all duration-300 hover:bg-white/20"
+              className="footer-theme-top-button"
             >
-
-              <span className="text-sm">
-                Back to Top
-              </span>
-
-              <ArrowUp size={16} />
-
+              <span className="text-sm">Back to Top</span>
+              <ArrowUp
+                size={16}
+                className="transition-transform duration-300 group-hover:-translate-y-1"
+              />
             </motion.button>
-
           </div>
 
           <motion.p
-            initial={{
-              opacity: 0,
-            }}
-            whileInView={{
-              opacity: 1,
-            }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 0.5,
-            }}
-            className="mt-4 text-center text-xs text-gray-500"
+            transition={{ duration: 0.5 }}
+            className="footer-theme-technology mt-5 text-center text-xs"
           >
             {data.technologyText}
           </motion.p>
-
         </div>
-
       </div>
     </footer>
   );

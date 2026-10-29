@@ -1,30 +1,32 @@
+
 import { useEffect, useState, useRef } from "react";
-
 import { getCertificates } from "../../services/certificateService";
-
 import { motion } from "motion/react";
-
-import { Download, Eye, Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Download,
+  Eye,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-
-import {
-  EffectCoverflow,
-  Pagination,
-} from "swiper/modules";
+import { EffectCoverflow, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 import "../../styles/animations.css";
+import "../../styles/portfolio-theme.css";
 
 export default function Certificates() {
   const [allCertificates, setAllCertificates] = useState([]);
   const [certificates, setCertificates] = useState([]);
   const [years, setYears] = useState([]);
-  
+
   const [selectedYear, setSelectedYear] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
+
   const swiperRef = useRef(null);
 
   const categories = [
@@ -36,103 +38,82 @@ export default function Certificates() {
     "Volunteering",
   ];
 
-  // --------------------------------------------------
-  // LOAD ALL CERTIFICATES ONCE
-  // --------------------------------------------------
-
+  // LOAD CERTIFICATES
   useEffect(() => {
+    const loadCertificates = async () => {
+      try {
+        const data = await getCertificates();
+        const list = Array.isArray(data) ? data : [];
+
+        const sortedData = [...list].sort(
+          (a, b) =>
+            new Date(b.date || 0) - new Date(a.date || 0)
+        );
+
+        setAllCertificates(sortedData);
+        setCertificates(sortedData);
+
+        const uniqueYears = [
+          ...new Set(
+            sortedData
+              .filter((certificate) => certificate.date)
+              .map((certificate) =>
+                new Date(certificate.date).getFullYear()
+              )
+          ),
+        ].sort((a, b) => b - a);
+
+        setYears(uniqueYears);
+      } catch (error) {
+        console.error("Failed to load certificates:", error);
+      }
+    };
+
     loadCertificates();
   }, []);
 
-  const loadCertificates = async () => {
-    try {
-      const data = await getCertificates();
-
-      // Sort newest → oldest
-      const sortedData = [...data].sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      );
-
-      setAllCertificates(sortedData);
-      setCertificates(sortedData);
-
-      // Extract unique years
-      const uniqueYears = [
-        ...new Set(
-          sortedData
-            .filter((certificate) => certificate.date)
-            .map((certificate) =>
-              new Date(certificate.date).getFullYear()
-            )
-        ),
-      ].sort((a, b) => b - a);
-
-      setYears(uniqueYears);
-    } catch (error) {
-      console.error("Failed to load certificates:", error);
-    }
-  };
-
-  // --------------------------------------------------
   // FILTER CERTIFICATES
-  // --------------------------------------------------
-
   useEffect(() => {
     let filtered = [...allCertificates];
 
-    // Year filter
     if (selectedYear !== "All") {
       filtered = filtered.filter((certificate) => {
         if (!certificate.date) return false;
 
-        const certificateYear = new Date(
-          certificate.date
-        ).getFullYear();
-
-        return certificateYear === Number(selectedYear);
+        return (
+          new Date(certificate.date).getFullYear() ===
+          Number(selectedYear)
+        );
       });
     }
 
-    // Category filter
     if (selectedCategory !== "All") {
       filtered = filtered.filter(
-        (certificate) =>
-          certificate.category === selectedCategory
+        (certificate) => certificate.category === selectedCategory
       );
     }
 
-    // Keep newest → oldest
     filtered.sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
+      (a, b) =>
+        new Date(b.date || 0) - new Date(a.date || 0)
     );
 
     setCertificates(filtered);
   }, [selectedYear, selectedCategory, allCertificates]);
 
-  // --------------------------------------------------
   // GOOGLE DRIVE HELPERS
-  // --------------------------------------------------
-
   const getDriveFileId = (url) => {
-    if (!url) return null;
+    if (!url || typeof url !== "string") return null;
 
-    // /file/d/FILE_ID/view
-    const fileMatch = url.match(
-      /\/file\/d\/([^/]+)/
-    );
+    // Supports /file/d/FILE_ID/view
+    const fileMatch = url.match(/\/file\/d\/([^/]+)/);
 
-    if (fileMatch) {
-      return fileMatch[1];
-    }
+    if (fileMatch) return fileMatch[1];
 
-    // ?id=FILE_ID
-    const idMatch = url.match(
-      /[?&]id=([^&]+)/
-    );
+    // Supports ?id=FILE_ID
+    const idMatch = url.match(/[?&]id=([^&]+)/);
 
-    if (idMatch) {
-      return idMatch[1];
-    }
+    if (idMatch) return idMatch[1];
 
     return null;
   };
@@ -140,326 +121,279 @@ export default function Certificates() {
   const getDriveThumbnail = (url) => {
     const fileId = getDriveFileId(url);
 
-    if (!fileId) {
-      console.error(
-        "Invalid Google Drive URL:",
-        url
-      );
+    if (!fileId) return url || "";
 
-      return "";
-    }
-
-    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
+    return `https://drive.google.com/thumbnail?id=${encodeURIComponent(
+      fileId
+    )}&sz=w1200`;
   };
 
   const getDrivePreviewUrl = (url) => {
     const fileId = getDriveFileId(url);
 
-    if (!fileId) return url;
+    if (!fileId) return url || "";
 
-    return `https://drive.google.com/file/d/${fileId}/view`;
+    return `https://drive.google.com/file/d/${encodeURIComponent(
+      fileId
+    )}/view`;
   };
 
   const getDriveDownloadUrl = (url) => {
     const fileId = getDriveFileId(url);
 
-    if (!fileId) return url;
+    if (!fileId) return url || "";
 
-    return `https://drive.google.com/uc?export=download&id=${fileId}`;
+    return `https://drive.google.com/uc?export=download&id=${encodeURIComponent(
+      fileId
+    )}`;
   };
-
-  // --------------------------------------------------
-  // FORMAT DATE
-  // --------------------------------------------------
 
   const formatDate = (date) => {
     if (!date) return "";
 
-    return new Date(date).getFullYear();
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) return "";
+
+    return parsedDate.getFullYear();
   };
 
   return (
     <section
       id="certificates"
-      className="py-24 px-6 lg:px-8 relative overflow-hidden"
+      className="certificates-theme-section relative overflow-hidden px-6 py-24 lg:px-8"
     >
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/3 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+      {/* BACKGROUND DECORATION */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="certificates-theme-orb absolute right-20 top-1/3 h-96 w-96 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-
-        {/* Heading */}
+      <div className="relative z-10 mx-auto max-w-7xl">
+        {/* HEADING */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="mb-12 text-center"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4 heading-reflection">
+          <h2 className="certificates-theme-title heading-reflection mb-4 text-4xl font-bold lg:text-5xl">
             CERTIFICATIONS
           </h2>
-
-          {/* <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
-            Professional certifications and credentials earned
-            through continuous learning and hands-on experience
-          </p> */}
         </motion.div>
 
-        {/* Filters */}
+        {/* FILTERS */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col md:flex-row items-center justify-center gap-4 mb-14"
+          className="mb-14 flex flex-col items-center justify-center gap-4 md:flex-row"
         >
-
-          {/* Filter Icon */}
-          <div className="hidden md:flex items-center justify-center w-11 h-11 rounded-xl bg-white/10 border border-white/10 text-white">
+          <div className="certificates-filter-icon hidden h-11 w-11 items-center justify-center rounded-xl border md:flex">
             <Filter size={18} />
           </div>
 
-          {/* Year Filter */}
+          {/* YEAR FILTER */}
           <select
             value={selectedYear}
-            onChange={(e) =>
-              setSelectedYear(e.target.value)
-            }
-            className="w-full md:w-auto min-w-[180px] px-5 py-3 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 text-white outline-none cursor-pointer hover:border-white/30 transition-all"
+            onChange={(e) => setSelectedYear(e.target.value)}
+            aria-label="Filter certificates by year"
+            className="certificates-filter-select w-full min-w-[180px] cursor-pointer rounded-xl border px-5 py-3 outline-none backdrop-blur-xl transition-colors md:w-auto"
           >
-            <option
-              value="All"
-              className="bg-gray-900"
-            >
-              All Years
-            </option>
+            <option value="All">All Years</option>
 
             {years.map((year) => (
-              <option
-                key={year}
-                value={year}
-                className="bg-gray-900"
-              >
+              <option key={year} value={year}>
                 {year}
               </option>
             ))}
           </select>
 
-          {/* Category Filter */}
+          {/* CATEGORY FILTER */}
           <select
             value={selectedCategory}
-            onChange={(e) =>
-              setSelectedCategory(e.target.value)
-            }
-            className="w-full md:w-auto min-w-[200px] px-5 py-3 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 text-white outline-none cursor-pointer hover:border-white/30 transition-all"
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            aria-label="Filter certificates by category"
+            className="certificates-filter-select w-full min-w-[200px] cursor-pointer rounded-xl border px-5 py-3 outline-none backdrop-blur-xl transition-colors md:w-auto"
           >
-            <option
-              value="All"
-              className="bg-gray-900"
-            >
-              All Categories
-            </option>
+            <option value="All">All Categories</option>
 
             {categories.map((category) => (
-              <option
-                key={category}
-                value={category}
-                className="bg-gray-900"
-              >
+              <option key={category} value={category}>
                 {category}
               </option>
             ))}
           </select>
-
         </motion.div>
 
-        {/* Certificate Slider */}
-{certificates.length > 0 ? (
-  <div className="relative">
-    {/* LEFT ARROW */}
-    <button
-      type="button"
-      onClick={() => swiperRef.current?.slidePrev()}
-      aria-label="Previous certificate"
-      className="absolute left-0 top-1/2 z-30 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all duration-300 hover:bg-white hover:text-black md:-left-5 lg:-left-8"
-    >
-      <ChevronLeft size={32} strokeWidth={2} />
-    </button>
+        {/* CERTIFICATE SLIDER */}
+        {certificates.length > 0 ? (
+          <div className="certificates-slider relative">
+            {/* LEFT ARROW */}
+            <button
+              type="button"
+              onClick={() => swiperRef.current?.slidePrev()}
+              aria-label="Previous certificate"
+              className="certificates-slider-arrow absolute left-0 top-1/2 z-30 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full md:-left-5 lg:-left-8"
+            >
+              <ChevronLeft size={32} strokeWidth={2} />
+            </button>
 
-    <Swiper
-      key={`${selectedYear}-${selectedCategory}`}
-      onSwiper={(swiper) => {
-        swiperRef.current = swiper;
-      }}
-      modules={[EffectCoverflow, Pagination]}
-      effect="coverflow"
-      centeredSlides={true}
-      grabCursor={true}
-      loop={certificates.length > 2}
-      pagination={{
-        clickable: true,
-      }}
-      coverflowEffect={{
-        rotate: 0,
-        stretch: 0,
-        depth: 180,
-        modifier: 1.5,
-        scale: 0.9,
-        slideShadows: false,
-      }}
-      breakpoints={{
-        0: {
-          slidesPerView: 1.1,
-        },
-        768: {
-          slidesPerView: 1.8,
-        },
-        1200: {
-          slidesPerView: 2.3,
-        },
-      }}
-    >
-            {certificates.map((cert, index) => (
-              <SwiperSlide
-                key={cert._id || cert.title}
-              >
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                    y: 30,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  viewport={{
-                    once: true,
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    delay: index * 0.1,
-                  }}
-                  className="
-                    group relative mx-auto w-full max-w-[420px]
-                    overflow-hidden rounded-2xl
-                    bg-white/5 backdrop-blur-xl p-8
-                    border border-white/10
-                    hover:border-white/30
-                    transition-all duration-300
-                  "     
-                >
-                  {/* PROJECT-STYLE HOVER GLOW */}
-                  <div
-                    className="
-                      pointer-events-none absolute inset-0 rounded-2xl
-                      bg-gradient-to-br from-transparent via-transparent
-                      to-white/5 opacity-0 transition duration-500
-                      group-hover:opacity-100
-                    "
-                  />
-                  {/* Top Right Actions */}
-                  <div className="absolute top-5 right-5 z-20 flex gap-2">
+            <Swiper
+              key={`${selectedYear}-${selectedCategory}`}
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+              modules={[EffectCoverflow, Pagination]}
+              effect="coverflow"
+              centeredSlides
+              grabCursor
+              loop={certificates.length > 2}
+              pagination={{ clickable: true }}
+              coverflowEffect={{
+                rotate: 0,
+                stretch: 0,
+                depth: 180,
+                modifier: 1.5,
+                scale: 0.9,
+                slideShadows: false,
+              }}
+              breakpoints={{
+                0: {
+                  slidesPerView: 1.1,
+                },
+                768: {
+                  slidesPerView: 1.8,
+                },
+                1200: {
+                  slidesPerView: 2.3,
+                },
+              }}
+            >
+              {certificates.map((cert, index) => (
+                <SwiperSlide key={cert._id || cert.title}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.5,
+                      delay: index * 0.1,
+                    }}
+                    className="certificate-theme-card group relative mx-auto flex h-full w-full max-w-[420px] flex-col overflow-hidden rounded-2xl border p-6 backdrop-blur-xl sm:p-8"
+                  >
+                    {/* HOVER GLOW */}
+                    <div className="certificate-card-glow pointer-events-none absolute inset-0 rounded-2xl" />
 
-                    {/* Preview */}
-                    <a
-                      href={getDrivePreviewUrl(
-                        cert.imageUrl
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="Preview Certificate"
-                      className="flex items-center justify-center w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-black hover:scale-105 transition-all duration-300"
-                    >
-                      <Eye size={18} />
-                    </a>
+                    {/* TOP ROW: CATEGORY + ACTIONS */}
+                    <div className="relative z-10 mb-5 flex min-h-10 items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <span className="certificate-category-badge inline-flex rounded-full border px-3 py-1.5 text-xs">
+                          {cert.category || "Certificate"}
+                        </span>
+                      </div>
 
-                    {/* Download */}
-                    <a
-                      href={getDriveDownloadUrl(
-                        cert.imageUrl
-                      )}
-                      title="Download Certificate"
-                      className="flex items-center justify-center w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-black hover:scale-105 transition-all duration-300"
-                    >
-                      <Download size={18} />
-                    </a>
+                      <div className="flex shrink-0 gap-2">
+                        {/* PREVIEW */}
+                        {cert.imageUrl && (
+                          <a
+                            href={getDrivePreviewUrl(cert.imageUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Preview Certificate"
+                            aria-label={`Preview ${cert.title}`}
+                            className="certificate-icon-button flex h-10 w-10 items-center justify-center rounded-full"
+                          >
+                            <Eye size={18} />
+                          </a>
+                        )}
 
-                  </div>
-
-                  {/* Category */}
-                  <div className="absolute top-5 left-5 z-20">
-                    <span className="px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-xs text-white">
-                      {cert.category}
-                    </span>
-                  </div>
-
-                  {/* Certificate Image */}
-                  <div className="mb-6 h-56 rounded-xl overflow-hidden border border-white/10 bg-white/10">
-                    <img
-                      src={getDriveThumbnail(
-                        cert.imageUrl
-                      )}
-                      alt={cert.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* Certificate Details */}
-                  <div className="space-y-3">
-
-                    <h3 className="text-xl font-bold text-white">
-                      {cert.title}
-                    </h3>
-
-                    <div className="flex justify-between items-center gap-4 text-sm">
-
-                      <span className="text-gray-300">
-                        {cert.issuer}
-                      </span>
-
-                      <span className="text-gray-400 whitespace-nowrap">
-                        {formatDate(cert.date)}
-                      </span>
-
+                        {/* DOWNLOAD */}
+                        {cert.imageUrl && (
+                          <a
+                            href={getDriveDownloadUrl(cert.imageUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Download Certificate"
+                            aria-label={`Download ${cert.title}`}
+                            className="certificate-icon-button flex h-10 w-10 items-center justify-center rounded-full"
+                          >
+                            <Download size={18} />
+                          </a>
+                        )}
+                      </div>
                     </div>
 
-                    <p className="text-gray-300 text-sm leading-7">
-                      {cert.description}
-                    </p>
+                    {/* CERTIFICATE IMAGE */}
+                    <div className="certificate-image-frame relative z-10 mb-6 h-48 shrink-0 overflow-hidden rounded-xl sm:h-52">
+                      {cert.imageUrl ? (
+                        <img
+                          src={getDriveThumbnail(cert.imageUrl)}
+                          alt={cert.title || "Certificate preview"}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      ) : (
+                        <div className="certificate-image-placeholder flex h-full items-center justify-center">
+                          <span className="certificates-theme-muted text-sm">
+                            No preview available
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
-                  </div>
+                    {/* CERTIFICATE DETAILS */}
+                    <div className="relative z-10 flex flex-1 flex-col gap-3">
+                      <h3 className="certificates-theme-title text-xl font-bold">
+                        {cert.title}
+                      </h3>
 
-                </motion.div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          {/* RIGHT ARROW */}
-    <button
-      type="button"
-      onClick={() => swiperRef.current?.slideNext()}
-      aria-label="Next certificate"
-      className="absolute right-0 top-1/2 z-30 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all duration-300 hover:bg-white hover:text-black md:-right-5 lg:-right-8"
-    >
-      <ChevronRight size={32} strokeWidth={2} />
-    </button>
-  </div>
+                      <div className="flex items-center justify-between gap-4 text-sm">
+                        <span className="certificates-theme-description min-w-0">
+                          {cert.issuer}
+                        </span>
+
+                        <span className="certificates-theme-muted shrink-0 whitespace-nowrap">
+                          {formatDate(cert.date)}
+                        </span>
+                      </div>
+
+                      {cert.description && (
+                        <p className="certificates-theme-description text-sm leading-7">
+                          {cert.description}
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+
+            {/* RIGHT ARROW */}
+            <button
+              type="button"
+              onClick={() => swiperRef.current?.slideNext()}
+              aria-label="Next certificate"
+              className="certificates-slider-arrow absolute right-0 top-1/2 z-30 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full md:-right-5 lg:-right-8"
+            >
+              <ChevronRight size={32} strokeWidth={2} />
+            </button>
+          </div>
         ) : (
-          /* No Results */
+          /* NO RESULTS */
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-20"
+            className="py-20 text-center"
           >
-            <p className="text-gray-400 text-lg">
+            <p className="certificates-theme-muted text-lg">
               No certificates found for the selected filters.
             </p>
           </motion.div>
         )}
 
-        {/* Additional Info */}
+        {/* FOOTER TEXT */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -467,12 +401,11 @@ export default function Certificates() {
           transition={{ duration: 0.6 }}
           className="mt-12 text-center"
         >
-          <p className="text-gray-400">
-            Continuously learning and earning new certifications
-            to stay updated with the latest technologies
+          <p className="certificates-theme-muted">
+            Continuously learning and earning new certifications to stay
+            updated with the latest technologies.
           </p>
         </motion.div>
-
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 
@@ -12,6 +13,7 @@ import { Typewriter } from "react-simple-typewriter";
 
 import { getHero } from "../../services/assetService";
 import "../../styles/animations.css";
+import "../../styles/portfolio-theme.css";
 
 const iconMap = {
   GitHub: GitHubIcon,
@@ -30,10 +32,7 @@ export default function Hero() {
         const data = await getHero();
         setContent(data);
       } catch (error) {
-        console.error(
-          "Failed to load hero section:",
-          error
-        );
+        console.error("Failed to load hero section:", error);
       }
     };
 
@@ -45,7 +44,6 @@ export default function Hero() {
   }
 
   const data = content.data || {};
-
   const socialLinks = data.socialLinks || [];
   const roles = data.roles || [];
   const floatingTech = data.floatingTech || [];
@@ -53,90 +51,57 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pt-20 lg:px-8"
+      className="hero-section relative flex min-h-screen items-center justify-center overflow-hidden px-6 pt-20 lg:px-8"
     >
+      {/* Theme-aware background */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="hero-orb hero-orb-left absolute left-10 top-20 h-96 w-96 rounded-full blur-3xl" />
 
-      {/* Animated Background */}
+        <div className="hero-orb hero-orb-right absolute bottom-20 right-10 h-96 w-96 rounded-full blur-3xl" />
 
-      <div className="absolute inset-0 overflow-hidden">
-
-        <div className="absolute left-10 top-20 h-96 w-96 animate-pulse rounded-full bg-white/5 blur-3xl" />
-
-        <div className="absolute bottom-20 right-10 h-96 w-96 animate-pulse rounded-full bg-white/5 blur-3xl [animation-delay:1000ms]" />
-
-        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-white/5 to-transparent blur-3xl" />
-
+        <div className="hero-center-glow absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
       </div>
 
-      {/* Grid */}
-
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      {/* Theme-aware grid */}
+      <div className="hero-grid pointer-events-none absolute inset-0" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl">
-
         <div className="grid items-center gap-12 lg:grid-cols-2">
-
           {/* Left */}
-
           <motion.div
-            initial={{
-              opacity: 0,
-              x: -50,
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-            }}
-            transition={{
-              duration: 0.8,
-            }}
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
             className="space-y-8"
           >
-
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                delay: 0.2,
-                duration: 0.8,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
               className="space-y-4"
             >
-
-              <div className="flex items-center gap-2 text-gray-400">
-
+              <div className="hero-muted flex items-center gap-2">
                 <AutoAwesomeIcon
-                  className="text-white"
+                  className="hero-accent"
                   fontSize="small"
                 />
 
                 <span className="text-sm uppercase tracking-wider">
                   {data.welcomeText}
                 </span>
-
               </div>
 
-              <h1 className="text-5xl font-bold leading-tight text-white lg:text-7xl">
-
+              <h1 className="hero-heading text-5xl font-bold leading-tight lg:text-7xl">
                 Hello, I'm
                 <br />
 
-                <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                <span className="hero-name">
                   {data.name}
                 </span>
-
               </h1>
 
               <div className="space-y-2">
-
-                <div className="flex min-h-[40px] items-center text-xl font-semibold text-white lg:text-2xl">
-
+                <div className="hero-role flex min-h-[40px] items-center text-xl font-semibold lg:text-2xl">
                   <Typewriter
                     words={roles}
                     loop={0}
@@ -146,199 +111,166 @@ export default function Hero() {
                     deleteSpeed={40}
                     delaySpeed={1800}
                   />
-
                 </div>
 
-                <p className="text-lg text-gray-400">
+                <p className="hero-muted text-lg">
                   {data.subtitle}
                 </p>
-
               </div>
-
             </motion.div>
 
+            {/* Description */}
             <motion.p
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                delay: 0.4,
-                duration: 0.8,
-              }}
-              className="max-w-xl text-lg leading-relaxed text-gray-400"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="hero-muted max-w-xl text-lg leading-relaxed"
             >
               {data.description}
             </motion.p>
 
             {/* Buttons */}
-
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                delay: 0.6,
-                duration: 0.8,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
               className="flex flex-wrap gap-4"
             >
-
               <a
                 href="#projects"
-                className="cv-hover rounded-lg bg-white px-8 py-3 font-medium text-black transition-all duration-300 "
+                className="button-glow inline-flex items-center justify-center rounded-lg px-8 py-3 font-medium"
               >
                 View Projects
               </a>
 
               <a
                 href="#contact"
-                className="contact-hover rounded-lg border border-white/20 bg-white/10 px-8 py-3 font-medium text-white backdrop-blur-sm transition-all duration-300"
+                className="hero-secondary-button inline-flex items-center justify-center rounded-lg px-8 py-3 font-medium"
               >
                 Contact Me
               </a>
-
             </motion.div>
 
             {/* Social Links */}
-
             <motion.div
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              transition={{
-                delay: 0.8,
-                duration: 0.8,
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
               className="flex flex-wrap gap-4"
             >
-
               {socialLinks.map((social, index) => {
-
-                const Icon =
-                  iconMap[social.icon];
+                const Icon = iconMap[social.icon];
 
                 if (!Icon) return null;
+
+                const isEmail = social.href.startsWith("mailto:");
 
                 return (
                   <a
                     key={`${social.icon}-${social.label}-${index}`}
                     href={social.href}
-                    target={
-                      social.href.startsWith("mailto:")
-                        ? undefined
-                        : "_blank"
-                    }
-                    rel={
-                      social.href.startsWith("mailto:")
-                        ? undefined
-                        : "noopener noreferrer"
-                    }
+                    target={isEmail ? undefined : "_blank"}
+                    rel={isEmail ? undefined : "noopener noreferrer"}
                     title={social.label}
-                    className="rounded-lg border border-white/10 bg-white/10 p-3 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/20"
+                    aria-label={social.label}
+                    className="hero-social-button rounded-lg p-3"
                   >
-
-                    <Icon className="text-white" />
-
+                    <Icon />
                   </a>
                 );
               })}
-
             </motion.div>
-
           </motion.div>
 
-          {/* Right */}
-
+          
+          {/* Right — Professional Hero Portrait */}
           <motion.div
-            initial={{
-              opacity: 0,
-              x: 50,
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-            }}
-            transition={{
-              duration: 0.8,
-            }}
-            className="relative hidden items-center justify-center lg:flex"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.15 }}
+            className="hero-portrait-column relative flex items-end justify-center lg:min-h-[650px]"
           >
+            <div className="hero-portrait-stage relative flex w-full items-end justify-center">
 
-            <div className="relative flex h-[500px] w-full items-center justify-center">
+              {/* Blue ambient glow */}
+              <div
+                aria-hidden="true"
+                className="hero-portrait-halo absolute bottom-8 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full blur-3xl sm:h-96 sm:w-96"
+              />
 
-              <div className="absolute inset-0 flex items-center justify-center">
+              {/* Decorative light rings */}
+              <div
+                aria-hidden="true"
+                className="hero-portrait-ring hero-portrait-ring-one absolute left-1/2 top-1/2"
+              />
 
-                <div className="h-96 w-96 animate-pulse rounded-full bg-gradient-to-r from-white/10 to-white/5 blur-2xl" />
+              <div
+                aria-hidden="true"
+                className="hero-portrait-ring hero-portrait-ring-two absolute left-1/2 top-1/2"
+              />
 
-              </div>
+              {/* Portrait */}
+              <motion.div
+                className="hero-portrait-image-wrap relative z-10"
+                animate={{ y: [0, -8, 0] }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <img
+                  src="/assets/Tanisha_hero.png"
+                  alt={`${data.name || "Tanisha"} — professional portrait`}
+                  className="hero-portrait-image"
+                  fetchPriority="high"
+                />
+              </motion.div>
 
-              <div className="relative z-10">
-
-                <div className="absolute h-[430px] w-[430px] animate-pulse rounded-full bg-gradient-to-r from-white/20 via-white/5 to-transparent blur-3xl" />
-
-                <div className="relative h-96 w-96 overflow-hidden rounded-full border-4 border-white/10 bg-white/5 shadow-2xl backdrop-blur-xl">
-
-                  <img
-                    src="/assets/Tanisha_img1.png"
-                    alt={data.name || "Profile"}
-                    className="h-full w-full object-cover transition-transform duration-500"
-                  />
-
-                </div>
-
-              </div>
-
+              {/* Floating technology badges */}
               {floatingTech.map((tech, index) => {
-
                 const positions = [
-                  "absolute right-4 top-12",
-                  "absolute bottom-24 right-0",
-                  "absolute bottom-16 left-0",
-                ];
-
-                const animations = [
-                  [0, -20, 0],
-                  [0, -15, 0],
-                  [0, -18, 0],
+                  "hero-portrait-badge-one",
+                  "hero-portrait-badge-two",
+                  "hero-portrait-badge-three",
                 ];
 
                 return (
                   <motion.div
                     key={tech}
+                    initial={{ opacity: 0, scale: 0.8 }}
                     animate={{
-                      y: animations[index % animations.length],
+                      opacity: 1,
+                      scale: 1,
+                      y: [0, -10, 0],
                     }}
                     transition={{
-                      duration: 2.5 + index * 0.3,
-                      repeat: Infinity,
-                      delay: index * 0.5,
+                      opacity: { duration: 0.5, delay: 0.5 + index * 0.15 },
+                      scale: { duration: 0.5, delay: 0.5 + index * 0.15 },
+                      y: {
+                        duration: 3 + index * 0.4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: index * 0.3,
+                      },
                     }}
-                    className={`${positions[index % positions.length]} rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-xl`}
+                    className={`hero-tech-badge hero-portrait-tech-badge ${
+                      positions[index % positions.length]
+                    } rounded-xl px-4 py-3 backdrop-blur-xl`}
                   >
-
-                    <span className="font-mono text-white">
+                    <span className="font-mono text-sm font-semibold">
                       {tech}
                     </span>
-
                   </motion.div>
                 );
               })}
 
+              {/* Bottom glow */}
+              <div
+                aria-hidden="true"
+                className="hero-portrait-bottom-glow absolute bottom-0 left-1/2 h-20 w-4/5 -translate-x-1/2 rounded-full blur-2xl"
+              />
             </div>
-
           </motion.div>
 
         </div>

@@ -1,109 +1,120 @@
+
 import { useEffect, useState } from "react";
 import { getAchievements } from "../../services/achievementService";
-import { motion } from 'motion/react';
-import { Trophy, Star, Award, Target } from 'lucide-react';
+import { motion } from "motion/react";
+import { Trophy, Star, Award, Target } from "lucide-react";
 import "../../styles/animations.css";
+import "../../styles/portfolio-theme.css";
+
+const icons = {
+  Trophy,
+  Star,
+  Award,
+  Target,
+};
 
 export default function Achievements() {
   const [achievements, setAchievements] = useState([]);
 
   useEffect(() => {
-      loadAchievements();
+    const loadAchievements = async () => {
+      try {
+        const data = await getAchievements();
+        setAchievements(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Failed to load achievements:", error);
+      }
+    };
+
+    loadAchievements();
   }, []);
 
-  const loadAchievements = async () => {
-      const data = await getAchievements();
-      setAchievements(data);
-  };
-
-  const icons = {
-    Trophy,
-    Star,
-    Award,
-    Target,
-  };
-
-  const Icon = icons[achievements.icon] || Award;
+  const stats = [
+    { label: "Hackathons", value: "5+" },
+    { label: "Awards Won", value: "1" },
+    { label: "Projects Built", value: "10+" },
+    { label: "Team Collaborations", value: "15+" },
+  ];
 
   return (
-    <section id="achievements" className="py-24 px-6 lg:px-8 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    <section
+      id="achievements"
+      className="achievements-theme-section relative overflow-hidden px-6 py-24 lg:px-8"
+    >
+      {/* THEME-AWARE GRID BACKGROUND */}
+      <div className="achievements-grid-background pointer-events-none absolute inset-0" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="relative z-10 mx-auto max-w-7xl">
+        {/* HEADING */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16 text-center"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4 heading-reflection">ACHIEVEMENTS</h2>
-          
-          
+          <h2 className="achievements-title heading-reflection mb-4 text-4xl font-bold lg:text-5xl">
+            ACHIEVEMENTS
+          </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {achievements.map((achievement, index) => (
-            <motion.div
-              key={achievement.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="
-                group relative overflow-hidden
-                bg-white/5 backdrop-blur-xl rounded-2xl p-8
-                border border-white/10
-                hover:border-white/30
-                transition-all duration-300
-              "
-            >
-              {/* PROJECT-STYLE HOVER GLOW */}
-              <div
-                className="
-                  pointer-events-none absolute inset-0 rounded-2xl
-                  bg-gradient-to-br from-transparent via-transparent
-                  to-white/5 opacity-0 transition duration-500
-                  group-hover:opacity-100
-                "
-              />
+        {/* ACHIEVEMENT CARDS */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {achievements.map((achievement, index) => {
+            const Icon = icons[achievement.icon] || Award;
 
-              <div className="relative z-10 space-y-4">
-                {/* Icon */}
-                <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-all">
-                  <Icon
-                      size={32}
-                      className="text-white"
-                  />
-                </div>
+            return (
+              <motion.div
+                key={achievement._id || achievement.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="achievement-theme-card group relative overflow-hidden rounded-2xl border p-8 backdrop-blur-xl"
+              >
+                {/* HOVER GLOW */}
+                <div className="achievement-card-glow pointer-events-none absolute inset-0 rounded-2xl" />
 
-                {/* Content */}
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-1">{achievement.title}</h3>
-                  <p className="text-sm text-gray-400 mb-3">{achievement.subtitle}</p>
-                  <p className="text-gray-300 text-sm leading-relaxed">{achievement.description}</p>
+                <div className="relative z-10 space-y-4">
+                  {/* ICON */}
+                  <div className="achievement-icon-box flex h-16 w-16 items-center justify-center rounded-xl">
+                    <Icon size={32} />
+                  </div>
+
+                  {/* CONTENT */}
+                  <div>
+                    <h3 className="achievements-title mb-1 text-xl font-bold">
+                      {achievement.title}
+                    </h3>
+
+                    <p className="achievements-muted mb-3 text-sm">
+                      {achievement.subtitle}
+                    </p>
+
+                    <p className="achievements-description text-sm leading-relaxed">
+                      {achievement.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Additional Highlights */}
+        {/* COMPETITION HIGHLIGHTS */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mt-16 bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10"
+          className="achievements-highlights mt-16 rounded-2xl border p-8 backdrop-blur-xl"
         >
-          <h3 className="text-2xl font-bold text-white mb-6 text-center">Competition Highlights</h3>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { label: 'Hackathons', value: '5+' },
-              { label: 'Awards Won', value: '1' },
-              { label: 'Projects Built', value: '10+' },
-              { label: 'Team Collaborations', value: '15+' },
-            ].map((stat, index) => (
+          <h3 className="achievements-title mb-6 text-center text-2xl font-bold">
+            Competition Highlights
+          </h3>
+
+          <div className="grid gap-6 md:grid-cols-4">
+            {stats.map((stat, index) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -112,12 +123,19 @@ export default function Achievements() {
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-gray-400 text-sm">{stat.label}</div>
+                <div className="achievements-stat-value mb-2 text-4xl font-bold">
+                  {stat.value}
+                </div>
+
+                <div className="achievements-muted text-sm">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </div>
         </motion.div>
+
+        {/* FOOTER TEXT */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -125,8 +143,9 @@ export default function Achievements() {
           transition={{ duration: 0.6 }}
           className="mt-12 text-center"
         >
-        <p className="text-gray-400 mt-6 max-w-2xl mx-auto">
-            Milestones and accomplishments that mark my journey in technology and innovation
+          <p className="achievements-muted mx-auto mt-6 max-w-2xl">
+            Milestones and accomplishments that mark my journey in technology
+            and innovation.
           </p>
         </motion.div>
       </div>

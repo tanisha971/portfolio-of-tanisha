@@ -1,10 +1,7 @@
+
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import {
-  Phone,
-  MapPin,
-  Send,
-} from "lucide-react";
+import { Phone, MapPin, Send } from "lucide-react";
 
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -12,7 +9,9 @@ import EmailIcon from "@mui/icons-material/Email";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
+
 import "../../styles/animations.css";
+import "../../styles/portfolio-theme.css";
 
 import { getContact } from "../../services/assetService";
 
@@ -42,10 +41,7 @@ export default function Contact() {
         const data = await getContact();
         setContent(data);
       } catch (error) {
-        console.error(
-          "Failed to load contact section:",
-          error
-        );
+        console.error("Failed to load contact section:", error);
       }
     };
 
@@ -54,7 +50,6 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     console.log("Form submitted:", formData);
   };
 
@@ -65,248 +60,185 @@ export default function Contact() {
     }));
   };
 
-  if (!content) {
-    return null;
-  }
+  if (!content) return null;
 
   const data = content.data || {};
-
   const contactInfo = data.contactInfo || [];
   const socialLinks = data.socialLinks || [];
 
   return (
     <section
       id="contact"
-      className="relative overflow-hidden px-6 py-24 lg:px-8"
+      className="contact-theme-section relative overflow-hidden px-6 py-24 lg:px-8"
     >
-
-      <div className="absolute inset-0">
-
-        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5 blur-3xl" />
-
+      {/* BACKGROUND GLOW */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="contact-theme-orb absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl">
-
-        {/* Heading */}
-
+        {/* HEADING */}
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-
-          <h2 className="mb-4 text-4xl uppercase font-bold text-white lg:text-5xl heading-reflection">
+          <h2 className="contact-theme-title heading-reflection mb-4 text-4xl font-bold uppercase lg:text-5xl">
             {data.heading}
           </h2>
-
         </motion.div>
 
         <div className="grid gap-12 lg:grid-cols-2">
-
-          {/* Form */}
-
+          {/* CONTACT FORM */}
           <motion.div
-            initial={{
-              opacity: 0,
-              x: -30,
-            }}
-            whileInView={{
-              opacity: 1,
-              x: 0,
-            }}
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl md:p-8"
+            className="contact-theme-panel rounded-2xl border p-6 backdrop-blur-xl md:p-8"
           >
-
-            <h3 className="mb-6 text-2xl font-bold text-white">
+            <h3 className="contact-theme-title mb-6 text-2xl font-bold">
               Send Message
             </h3>
 
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-6"
-            >
-
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-
                 <label
-                  htmlFor="name"
-                  className="mb-2 block text-sm text-gray-300"
+                  htmlFor="contact-name"
+                  className="contact-theme-label mb-2 block text-sm"
                 >
                   Your Name
                 </label>
 
                 <input
                   type="text"
-                  id="name"
+                  id="contact-name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-white/10 bg-white/10 px-4 py-3 text-white placeholder-gray-500 transition-all focus:border-white/30 focus:outline-none"
+                  autoComplete="name"
+                  className="contact-theme-input w-full rounded-lg border px-4 py-3"
                   placeholder="John Doe"
                 />
-
               </div>
 
               <div>
-
                 <label
-                  htmlFor="email"
-                  className="mb-2 block text-sm text-gray-300"
+                  htmlFor="contact-email"
+                  className="contact-theme-label mb-2 block text-sm"
                 >
                   Your Email
                 </label>
 
                 <input
                   type="email"
-                  id="email"
+                  id="contact-email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-white/10 bg-white/10 px-4 py-3 text-white placeholder-gray-500 transition-all focus:border-white/30 focus:outline-none"
+                  autoComplete="email"
+                  className="contact-theme-input w-full rounded-lg border px-4 py-3"
                   placeholder="john@example.com"
                 />
-
               </div>
 
               <div>
-
                 <label
-                  htmlFor="message"
-                  className="mb-2 block text-sm text-gray-300"
+                  htmlFor="contact-message"
+                  className="contact-theme-label mb-2 block text-sm"
                 >
                   Message
                 </label>
 
                 <textarea
-                  id="message"
+                  id="contact-message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="w-full resize-none rounded-lg border border-white/10 bg-white/10 px-4 py-3 text-white placeholder-gray-500 transition-all focus:border-white/30 focus:outline-none"
+                  className="contact-theme-input w-full resize-none rounded-lg border px-4 py-3"
                   placeholder="Your message here..."
                 />
-
               </div>
 
               <button
                 type="submit"
-                className="cv-hover flex w-full items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 font-medium text-black transition-all duration-300"
+                className="button-glow flex w-full items-center justify-center gap-2 rounded-lg px-6 py-3 font-medium"
               >
-
                 <Send size={20} />
-
                 <span>Send Message</span>
-
               </button>
-
             </form>
-
           </motion.div>
 
-          {/* Right */}
-
+          {/* RIGHT COLUMN */}
           <motion.div
-            initial={{
-              opacity: 0,
-              x: 30,
-            }}
-            whileInView={{
-              opacity: 1,
-              x: 0,
-            }}
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="space-y-8"
           >
-
-            {/* Contact Information */}
-
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
-
-              <h3 className="mb-6 text-2xl font-bold text-white">
+            {/* CONTACT INFORMATION */}
+            <div className="contact-theme-panel rounded-2xl border p-8 backdrop-blur-xl">
+              <h3 className="contact-theme-title mb-6 text-2xl font-bold">
                 Contact Information
               </h3>
 
               <div className="space-y-6">
-
                 {contactInfo.map((info) => {
-
-                  const Icon =
-                    iconMap[info.icon] || EmailIcon;
+                  const Icon = iconMap[info.icon] || EmailIcon;
 
                   return (
                     <div
                       key={info.label}
                       className="flex items-start gap-4"
                     >
-
-                      <div className="flex-shrink-0 rounded-lg bg-white/10 p-3">
-
+                      <div className="contact-theme-icon-box flex-shrink-0 rounded-lg p-3">
                         <Icon
-                          size={24}
-                          className="text-white"
+                          fontSize="medium"
+                          className="contact-theme-icon"
                         />
-
                       </div>
 
-                      <div>
-
-                        <p className="mb-1 text-sm text-gray-400">
+                      <div className="min-w-0">
+                        <p className="contact-theme-muted mb-1 text-sm">
                           {info.label}
                         </p>
 
                         {info.href ? (
                           <a
                             href={info.href}
-                            className="break-all text-white transition-colors hover:text-gray-300"
+                            className="contact-theme-link break-all"
                           >
                             {info.value}
                           </a>
                         ) : (
-                          <p className="text-white">
+                          <p className="contact-theme-title break-words">
                             {info.value}
                           </p>
                         )}
-
                       </div>
-
                     </div>
                   );
                 })}
-
               </div>
-
             </div>
 
-            {/* Social Links */}
-
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
-
-              <h3 className="mb-6 text-2xl font-bold text-white">
+            {/* SOCIAL LINKS */}
+            <div className="contact-theme-panel rounded-2xl border p-8 backdrop-blur-xl">
+              <h3 className="contact-theme-title mb-6 text-2xl font-bold">
                 Social Links
               </h3>
 
               <div className="grid grid-cols-3 gap-4 sm:grid-cols-6">
-
                 {socialLinks.map((social) => {
-
-                  const Icon =
-                    iconMap[social.icon] || EmailIcon;
+                  const Icon = iconMap[social.icon] || EmailIcon;
 
                   return (
                     <a
@@ -314,51 +246,46 @@ export default function Contact() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center rounded-xl border border-white/10 bg-white/10 p-4 transition-all duration-300 hover:scale-105 hover:bg-white/20"
+                      className="contact-social-link flex items-center justify-center rounded-xl border p-4"
                       aria-label={social.label}
+                      title={social.label}
                     >
-
-                      <Icon
-                        fontSize="medium"
-                        className="text-white"
-                      />
-
+                      <Icon fontSize="medium" />
                     </a>
                   );
                 })}
-
               </div>
-
             </div>
 
             {/* CTA */}
+            {data.cta && (
+              <div className="contact-theme-cta rounded-2xl border p-8 backdrop-blur-xl">
+                <h3 className="contact-theme-title mb-4 text-xl font-bold">
+                  {data.cta.title}
+                </h3>
 
-            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-8 backdrop-blur-xl">
-
-              <h3 className="mb-4 text-xl font-bold text-white">
-                {data.cta?.title}
-              </h3>
-
-              <p className="leading-relaxed text-gray-300">
-                {data.cta?.description}
-              </p>
-
-            </div>
-
+                <p className="contact-theme-description leading-relaxed">
+                  {data.cta.description}
+                </p>
+              </div>
+            )}
           </motion.div>
-
         </div>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-12 text-center"
-        >
-        <p className="mx-auto mt-6 max-w-2xl text-gray-400">
-            {data.description}
-          </p>
-        </motion.div>
+
+        {/* FOOTER DESCRIPTION */}
+        {data.description && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mt-12 text-center"
+          >
+            <p className="contact-theme-muted mx-auto mt-6 max-w-2xl">
+              {data.description}
+            </p>
+          </motion.div>
+        )}
       </div>
     </section>
   );
