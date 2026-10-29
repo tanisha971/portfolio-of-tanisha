@@ -26,7 +26,7 @@ export default function Projects() {
   const [selectedYear, setSelectedYear] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const swiperRef = useRef(null);
+  const [swiperInstance, setSwiperInstance] = useState(null);
 
   // LOAD PROJECTS
   useEffect(() => {
@@ -205,18 +205,25 @@ export default function Projects() {
 
             <button
               type="button"
-              onClick={() => swiperRef.current?.slidePrev()}
+              onClick={() => {
+                if (swiperInstance && !swiperInstance.destroyed) {
+                  swiperInstance.slidePrev();
+                }
+              }}
               aria-label="Previous project"
-              className="projects-slider-arrow absolute left-0 top-1/2 z-30 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full md:-left-5 lg:-left-8"
+              className="projects-slider-arrow projects-slider-arrow-left absolute left-0 top-1/2 z-50 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full md:-left-5 lg:-left-8"
             >
               <ChevronLeft size={32} strokeWidth={2} />
             </button>
 
             <Swiper
               key={`${selectedYear}-${selectedCategory}`}
-              onSwiper={(swiper) => {
-                swiperRef.current = swiper;
-              }}
+              onSwiper={(swiper) => setSwiperInstance(swiper)}
+                onBeforeDestroy={(swiper) => {
+                  setSwiperInstance((current) =>
+                    current === swiper ? null : current
+                  );
+                }}
               modules={[EffectCoverflow, Pagination]}
               effect="coverflow"
               centeredSlides
@@ -244,7 +251,7 @@ export default function Projects() {
               }}
             >
               {projects.map((project, index) => (
-                <SwiperSlide key={project._id}>
+                <SwiperSlide key={project._id || project.id || index}>
                   <ProjectCard
                     project={project}
                     index={index}
@@ -257,9 +264,13 @@ export default function Projects() {
 
             <button
               type="button"
-              onClick={() => swiperRef.current?.slideNext()}
+              onClick={() => {
+                if (swiperInstance && !swiperInstance.destroyed) {
+                  swiperInstance.slideNext();
+                }
+              }}
               aria-label="Next project"
-              className="projects-slider-arrow absolute right-0 top-1/2 z-30 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full md:-right-5 lg:-right-8"
+              className="projects-slider-arrow projects-slider-arrow-right absolute right-0 top-1/2 z-50 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full md:-right-5 lg:-right-8"
             >
               <ChevronRight size={32} strokeWidth={2} />
             </button>
